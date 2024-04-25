@@ -13,6 +13,7 @@ struct AP_PIDInfo {
     float P;
     float I;
     float D;
+    float D2;
     float FF;
     float Dmod;
     float slew_rate;
