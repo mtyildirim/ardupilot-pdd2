@@ -32,7 +32,7 @@ public:
     //  target and error are filtered
     //  the derivative is then calculated and filtered
     //  the integral is then updated based on the setting of the limit flag
-    float update_all(float target, float measurement, float dt, bool limit = false, float boost = 1.0f);
+    float update_all(float target, float angle, float gyro, float ang_acc, float dt, bool limit = false, float boost = 1.0f);
 
     //  update_error - set error input to PDD2 controller and calculate outputs
     //  target is set to zero and error is set and filtered
@@ -40,7 +40,7 @@ public:
     //  the integral is then updated based on the setting of the limit flag
     //  Target and Measured must be set manually for logging purposes.
     // todo: remove function when it is no longer used.
-    float update_error(float error, float dt, bool limit = false);
+    float update_error(float error,float gyro, float ang_acc, float dt, bool limit = false);
 
     // get_PDD2 - get results from PDD2 controller
     float get_PDD2() const;
@@ -135,6 +135,7 @@ protected:
     float _error;             // error value to enable filtering
     float _derivative;        // derivative value to enable filtering
     float _derivative2;
+    float _last_derivative;
     int8_t _slew_limit_scale;
 
     AP_PIDInfo _PDD2_info;

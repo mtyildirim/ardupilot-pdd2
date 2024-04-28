@@ -125,10 +125,10 @@ void AC_PDD2::slew_limit(float smax)
 //  target and error are filtered
 //  the derivative is then calculated and filtered
 //  the integral is then updated based on the setting of the limit flag
-float AC_PDD2::update_all(float target, float measurement, float dt, bool limit, float boost)
+float AC_PDD2::update_all(float target, float angle,float gyro, float ang_acc, float dt, bool limit, float boost)
 {
     // don't process inf or NaN
-    if (!isfinite(target) || !isfinite(measurement)) {
+    if (!isfinite(target) || !isfinite(angle)) {
         return 0.0f;
     }
 
@@ -136,12 +136,13 @@ float AC_PDD2::update_all(float target, float measurement, float dt, bool limit,
     if (_flags._reset_filter) {
         _flags._reset_filter = false;
         _target = target;
-        _error = _target - measurement;
+        _error = _target - angle;
         _derivative = 0.0f;
+        _last_derivative = 0.0f;
     } else {
         float error_last = _error;
         _target += get_filt_T_alpha(dt) * (target - _target);
-        _error += get_filt_E_alpha(dt) * ((_target - measurement) - _error);
+        _error += get_filt_E_alpha(dt) * ((_target - angle) - _error);
 
         // calculate and filter derivative
         if (is_positive(dt)) {
@@ -150,15 +151,15 @@ float AC_PDD2::update_all(float target, float measurement, float dt, bool limit,
         }
 
         if (is_positive(dt)) {
-            float derivative2 = (_error - error_last) / dt;
+            float derivative2 = (_derivative - _last_derivative) / dt;
             _derivative2 += get_filt_D_alpha(dt) * (derivative2 - _derivative2);
         }
     
     }
     
     float P_out = (_error * _kp);
-    float D_out = (_derivative * _kd);
-    float D2_out = (_derivative2 * _kd2);
+    float D_out = (_derivative * _kd) - gyro;
+    float D2_out = (_derivative2 * _kd2) - ang_acc;
 
     // calculate slew limit modifier for P+D
     _PDD2_info.Dmod = _slew_limiter.modifier((_PDD2_info.P + _PDD2_info.D + _PDD2_info.D2) * _slew_limit_scale, dt);
@@ -172,11 +173,13 @@ float AC_PDD2::update_all(float target, float measurement, float dt, bool limit,
     D_out *= boost;
 
     _PDD2_info.target = _target;
-    _PDD2_info.actual = measurement;
+    _PDD2_info.actual = angle;
     _PDD2_info.error = _error;
     _PDD2_info.P = P_out;
     _PDD2_info.D = D_out;
     _PDD2_info.D2 = D2_out;
+
+    _last_derivative = _derivative;
 
     return P_out + D_out + D2_out;
 }
@@ -187,7 +190,7 @@ float AC_PDD2::update_all(float target, float measurement, float dt, bool limit,
 //  the integral is then updated based on the setting of the limit flag
 //  Target and Measured must be set manually for logging purposes.
 // todo: remove function when it is no longer used.
-float AC_PDD2::update_error(float error, float dt, bool limit)
+float AC_PDD2::update_error(float error,float gyro, float ang_acc, float dt, bool limit)
 {
     // don't process inf or NaN
     if (!isfinite(error)) {
@@ -201,6 +204,7 @@ float AC_PDD2::update_error(float error, float dt, bool limit)
         _flags._reset_filter = false;
         _error = error;
         _derivative = 0.0f;
+        _last_derivative = 0.0f;
     } else {
         float error_last = _error;
         _error += get_filt_E_alpha(dt) * (error - _error);
@@ -212,14 +216,14 @@ float AC_PDD2::update_error(float error, float dt, bool limit)
         }
     
         if (is_positive(dt)) {
-            float derivative2 = (_error - error_last) / dt;
-            _derivative2 += get_filt_D2_alpha(dt) * (derivative2 - _derivative2);
+            float derivative2 = (_derivative - _last_derivative) / dt;
+            _derivative2 += get_filt_D_alpha(dt) * (derivative2 - _derivative2);
         }
     }
 
     float P_out = (_error * _kp);
-    float D_out = (_derivative * _kd);
-    float D2_out = (_derivative2 * _kd2);
+    float D_out = (_derivative * _kd) - gyro;
+    float D2_out = (_derivative2 * _kd2) - ang_acc;
 
     // calculate slew limit modifier for P+D
     _PDD2_info.Dmod = _slew_limiter.modifier((_PDD2_info.P + _PDD2_info.D) * _slew_limit_scale, dt);
@@ -233,6 +237,8 @@ float AC_PDD2::update_error(float error, float dt, bool limit)
     _PDD2_info.error = _error;
     _PDD2_info.P = P_out;
     _PDD2_info.D = D_out;
+
+    _last_derivative = _derivative;
 
     return P_out + D_out + D2_out;
 }

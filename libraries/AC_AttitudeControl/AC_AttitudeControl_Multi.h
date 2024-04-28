@@ -51,6 +51,11 @@ public:
     AC_PID& get_rate_pitch_pid() override { return _pid_rate_pitch; }
     AC_PID& get_rate_yaw_pid() override { return _pid_rate_yaw; }
 
+    // pdd2 accessors
+    AC_PDD2& get_rate_roll_pdd2() override { return _pdd2_rate_roll; }
+    AC_PDD2& get_rate_pitch_pdd2() override { return _pdd2_rate_pitch; }
+    AC_PDD2& get_rate_yaw_pdd2() override { return _pdd2_rate_yaw; }
+
     // Update Alt_Hold angle maximum
     void update_althold_lean_angle_max(float throttle_in) override;
 
@@ -96,6 +101,10 @@ protected:
     AC_PID                _pid_rate_roll;
     AC_PID                _pid_rate_pitch;
     AC_PID                _pid_rate_yaw;
+
+    AC_PDD2               _pdd2_rate_roll;
+    AC_PDD2               _pdd2_rate_pitch;
+    AC_PDD2               _pdd2_rate_yaw;
 
     AP_Float              _thr_mix_man;     // throttle vs attitude control prioritisation used when using manual throttle (higher values mean we prioritise attitude control over throttle)
     AP_Float              _thr_mix_min;     // throttle vs attitude control prioritisation used when landing (higher values mean we prioritise attitude control over throttle)

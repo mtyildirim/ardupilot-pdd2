@@ -10,6 +10,7 @@
 #include <AP_Motors/AP_Motors.h>
 #include <AC_PID/AC_PID.h>
 #include <AC_PID/AC_P.h>
+#include <AC_PID/AC_PDD2.h>
 #include <AP_Vehicle/AP_MultiCopter.h>
 
 #define AC_ATTITUDE_CONTROL_ANGLE_P                     4.5f             // default angle P gain for roll, pitch and yaw
@@ -86,6 +87,9 @@ public:
     virtual AC_PID& get_rate_roll_pid() = 0;
     virtual AC_PID& get_rate_pitch_pid() = 0;
     virtual AC_PID& get_rate_yaw_pid() = 0;
+    virtual AC_PDD2& get_rate_roll_pdd2() = 0;
+    virtual AC_PDD2& get_rate_pitch_pdd2() = 0;
+    virtual AC_PDD2& get_rate_yaw_pdd2() = 0;
 
     // get the roll acceleration limit in centidegrees/s/s or radians/s/s
     float get_accel_roll_max_cdss() const { return _accel_roll_max; }
