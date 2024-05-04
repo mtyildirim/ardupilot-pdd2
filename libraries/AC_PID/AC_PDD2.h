@@ -9,6 +9,22 @@
 #include <cmath>
 #include <Filter/SlewLimiter.h>
 
+
+
+#define AC_PDD2_DEFAULT_P_ROLL    1.0f
+#define AC_PDD2_DEFAULT_D_ROLL    0.25f
+#define AC_PDD2_DEFAULT_D2_ROLL   0.02f
+
+#define AC_PDD2_DEFAULT_P_PITCH   1.0f
+#define AC_PDD2_DEFAULT_D_PITCH   0.25f
+#define AC_PDD2_DEFAULT_D2_PITCH  0.02f
+
+#define AC_PDD2_DEFAULT_P_YAW     1.0f
+#define AC_PDD2_DEFAULT_D_YAW     0.25f
+#define AC_PDD2_DEFAULT_D2_YAW    0.02f
+
+
+
 #define AC_PDD2_TFILT_HZ_DEFAULT  0.0f   // default input filter frequency
 #define AC_PDD2_EFILT_HZ_DEFAULT  0.0f   // default input filter frequency
 #define AC_PDD2_DFILT_HZ_DEFAULT  20.0f   // default input filter frequency

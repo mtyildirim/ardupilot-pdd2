@@ -124,7 +124,7 @@ void AC_PDD2::slew_limit(float smax)
 //  update_all - set target and measured inputs to PDD2 controller and calculate outputs
 //  target and error are filtered
 //  the derivative is then calculated and filtered
-//  the integral is then updated based on the setting of the limit flag
+//  the second derivative is also used
 float AC_PDD2::update_all(float target, float angle,float gyro, float ang_acc, float dt, bool limit, float boost)
 {
     // don't process inf or NaN

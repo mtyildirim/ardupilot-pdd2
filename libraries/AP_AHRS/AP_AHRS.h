@@ -87,6 +87,10 @@ public:
     void            update(bool skip_ins_update=false);
     void            reset();
 
+    // get current angular accelerations
+
+    const Vector3f &get_ang_acc(void) const;
+
     // dead-reckoning support
     bool get_location(Location &loc) const;
 

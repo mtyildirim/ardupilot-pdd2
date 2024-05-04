@@ -57,6 +57,7 @@
 #include <RC_Channel/RC_Channel.h>
 #include <AP_VisualOdom/AP_VisualOdom.h>
 
+
 #include "MissionItemProtocol_Waypoints.h"
 #include "MissionItemProtocol_Rally.h"
 #include "MissionItemProtocol_Fence.h"
@@ -91,6 +92,8 @@
 #include <AP_GPS/AP_GPS.h>
 
 #include <ctype.h>
+
+
 
 extern const AP_HAL::HAL& hal;
 
@@ -1953,6 +1956,7 @@ void GCS_MAVLINK::send_raw_imu()
 
     const Vector3f &accel = ins.get_accel(0);
     const Vector3f &gyro = ins.get_gyro(0);
+    const Vector3f &_ang_acc = ins.get_ang_acc();
     Vector3f mag;
     if (compass.get_count() >= 1) {
         mag = compass.get_field(0);
@@ -1974,6 +1978,10 @@ void GCS_MAVLINK::send_raw_imu()
         mag.z,
         0,  // we use SCALED_IMU and SCALED_IMU2 for other IMUs
         int16_t(ins.get_temperature(0)*100));
+
+    send_named_float("Angular Acceleration X",_ang_acc.x);
+    send_named_float("Angular Acceleration Y",_ang_acc.y);
+    send_named_float("Angular Acceleration Z",_ang_acc.z);
 #endif
 }
 
@@ -2017,6 +2025,7 @@ void GCS_MAVLINK::send_scaled_imu(uint8_t instance, void (*send_fn)(mavlink_chan
         mag.y,
         mag.z,
         _temperature);
+
 #endif
 }
 

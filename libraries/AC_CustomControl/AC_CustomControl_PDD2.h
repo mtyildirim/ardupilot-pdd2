@@ -1,6 +1,8 @@
 #pragma once
 #include <AP_Common/AP_Common.h>
 #include <AP_Param/AP_Param.h>
+#include <AC_PID/AC_PDD2.h>
+#include <AP_InertialSensor/AP_InertialSensor.h>
 #include "AC_CustomControl_Backend.h"
 
 #ifndef CUSTOMCONTROL_PDD2_ENABLED
@@ -11,7 +13,7 @@
 
 class AC_CustomControl_PDD2 : public AC_CustomControl_Backend {
 public:
-    AC_CustomControl_PDD2(AC_CustomControl& frontend, AP_AHRS_View*& ahrs, AC_AttitudeControl_Multi*& att_control, AP_MotorsMulticopter*& motors, float dt);
+    AC_CustomControl_PDD2(AC_CustomControl& frontend, AP_AHRS*& ahrs, AC_AttitudeControl_Multi*& att_control,AC_PosControl*& pos_control ,AP_MotorsMulticopter*& motors, float dt);
 
 
     Vector3f update(void) override;
