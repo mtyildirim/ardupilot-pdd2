@@ -87,9 +87,9 @@ public:
     virtual AC_PID& get_rate_roll_pid() = 0;
     virtual AC_PID& get_rate_pitch_pid() = 0;
     virtual AC_PID& get_rate_yaw_pid() = 0;
-    virtual AC_PDD2& get_rate_roll_pdd2() = 0;
-    virtual AC_PDD2& get_rate_pitch_pdd2() = 0;
-    virtual AC_PDD2& get_rate_yaw_pdd2() = 0;
+ //   virtual AC_PDD2& get_rate_roll_pdd2() = 0;
+ //   virtual AC_PDD2& get_rate_pitch_pdd2() = 0;
+ //   virtual AC_PDD2& get_rate_yaw_pdd2() = 0;
 
     // get the roll acceleration limit in centidegrees/s/s or radians/s/s
     float get_accel_roll_max_cdss() const { return _accel_roll_max; }

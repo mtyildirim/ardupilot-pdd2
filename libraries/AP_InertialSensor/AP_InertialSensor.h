@@ -112,7 +112,6 @@ public:
     /// @returns	vector of rotational rates in radians/second square
     ///
     const Vector3f     &get_ang_acc(void) const { return _ang_acc; }
-    const Vector3f     &get_ang_acc(void) const { return get_ang_acc(); }
 
     // set gyro offsets in radians/sec
     const Vector3f &get_gyro_offsets(uint8_t i) const { return _gyro_offset(i); }
