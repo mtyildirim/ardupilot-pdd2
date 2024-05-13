@@ -67,6 +67,7 @@ public:
         Invensense_ICM20601,
         Invensense_ICM20789,
         Invensense_ICM20689,
+        Invensense_MPU6050,
     };
 
     // acclerometers on Invensense sensors will return values up to

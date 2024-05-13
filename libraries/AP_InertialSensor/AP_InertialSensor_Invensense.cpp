@@ -113,7 +113,7 @@ AP_InertialSensor_Backend *AP_InertialSensor_Invensense::probe(AP_InertialSensor
         sensor->_id = HAL_INS_MPU9250_I2C;
     } else {
         sensor->_id = HAL_INS_MPU60XX_I2C;
-    }
+    } 
 
     return sensor;
 }
@@ -281,7 +281,7 @@ void AP_InertialSensor_Invensense::start()
         temp_zero = 21.0f;
         temp_sensitivity = 1.0f/340;
         break;
-
+    case Invensense_MPU6050:
     case Invensense_MPU6000:
     case Invensense_MPU6500:
         temp_zero = 36.53f;
