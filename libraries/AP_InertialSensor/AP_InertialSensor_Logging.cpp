@@ -4,7 +4,7 @@
 #include <AP_Logger/AP_Logger.h>
 
 // Write ACC data packet: raw accel data
-void AP_InertialSensor_Backend::Write_ACC(const uint8_t instance, const uint64_t sample_us, const Vector3f &accel) const
+void AP_InertialSensor_Backend::Write_ACC(const uint8_t instance, const uint64_t sample_us, const Vector3f &accel,const Vector3f &ang_acc) const
 {
         const uint64_t now = AP_HAL::micros64();
         const struct log_ACC pkt {
@@ -14,7 +14,11 @@ void AP_InertialSensor_Backend::Write_ACC(const uint8_t instance, const uint64_t
             sample_us : sample_us?sample_us:now,
             AccX      : accel.x,
             AccY      : accel.y,
-            AccZ      : accel.z
+            AccZ      : accel.z,
+            AngAccX   : ang_acc.x,
+            AngAccY   : ang_acc.y,
+            AngAccZ   : ang_acc.z
+
         };
         AP::logger().WriteBlock(&pkt, sizeof(pkt));
 }

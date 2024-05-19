@@ -23,7 +23,7 @@ struct PACKED log_ACC {
     uint64_t time_us;
     uint8_t instance;
     uint64_t sample_us;
-    float AccX, AccY, AccZ;
+    float AccX, AccY, AccZ,AngAccX,AngAccY,AngAccZ;
 };
 
 // @LoggerMessage: GYR

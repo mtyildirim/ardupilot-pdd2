@@ -29,6 +29,7 @@
 #include "AP_InertialSensor_LSM9DS0.h"
 #include "AP_InertialSensor_LSM9DS1.h"
 #include "AP_InertialSensor_Invensense.h"
+#include "AP_InertialSensor_MPU6050.h"
 #include "AP_InertialSensor_SITL.h"
 #include "AP_InertialSensor_RST.h"
 #include "AP_InertialSensor_BMI055.h"
@@ -39,6 +40,7 @@
 #include "AP_InertialSensor_Invensensev3.h"
 #include "AP_InertialSensor_NONE.h"
 #include "AP_InertialSensor_SCHA63T.h"
+
 
 /* Define INS_TIMING_DEBUG to track down scheduling issues with the main loop.
  * Output is on the debug console. */

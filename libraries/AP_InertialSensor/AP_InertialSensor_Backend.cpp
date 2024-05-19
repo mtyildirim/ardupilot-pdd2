@@ -476,13 +476,14 @@ void AP_InertialSensor_Backend::log_gyro_raw(uint8_t instance, const uint64_t sa
 /*
   rotate accel vector, scale and add the accel offset
  */
-void AP_InertialSensor_Backend::_publish_accel(uint8_t instance, const Vector3f &accel) /* front end */
+void AP_InertialSensor_Backend::_publish_accel(uint8_t instance, const Vector3f &accel, const Vector3f &ang_acc) /* front end */
 {
     if ((1U<<instance) & _imu.imu_kill_mask) {
         return;
     }
     _imu._accel[instance] = accel;
     _imu._accel_healthy[instance] = true;
+    _imu._ang_acc = ang_acc;
 
     // publish delta velocity
     _imu._delta_velocity[instance] = _imu._delta_velocity_acc[instance];
@@ -685,7 +686,7 @@ void AP_InertialSensor_Backend::_notify_new_gyro_sensor_rate_sample(uint8_t inst
 #endif
 }
 
-void AP_InertialSensor_Backend::log_accel_raw(uint8_t instance, const uint64_t sample_us, const Vector3f &accel)
+void AP_InertialSensor_Backend::log_accel_raw(uint8_t instance, const uint64_t sample_us, const Vector3f &accel,const Vector3f &ang_acc)
 {
 #if HAL_LOGGING_ENABLED
     AP_Logger *logger = AP_Logger::get_singleton();
@@ -694,7 +695,7 @@ void AP_InertialSensor_Backend::log_accel_raw(uint8_t instance, const uint64_t s
         return;
     }
     if (should_log_imu_raw()) {
-        Write_ACC(instance, sample_us, accel);
+        Write_ACC(instance, sample_us, accel,ang_acc);
     } else {
 #if AP_INERTIALSENSOR_BATCHSAMPLER_ENABLED
         if (!_imu.batchsampler.doing_sensor_rate_logging()) {
