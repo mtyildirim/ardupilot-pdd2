@@ -4,7 +4,7 @@
 #include <AP_Logger/AP_Logger.h>
 
 // Write ACC data packet: raw accel data
-void AP_InertialSensor_Backend::Write_ACC(const uint8_t instance, const uint64_t sample_us, const Vector3f &accel,const Vector3f &ang_acc) const
+void AP_InertialSensor_Backend::Write_ACC(const uint8_t instance, const uint64_t sample_us, const Vector3f &accel) const
 {
         const uint64_t now = AP_HAL::micros64();
         const struct log_ACC pkt {
@@ -14,11 +14,7 @@ void AP_InertialSensor_Backend::Write_ACC(const uint8_t instance, const uint64_t
             sample_us : sample_us?sample_us:now,
             AccX      : accel.x,
             AccY      : accel.y,
-            AccZ      : accel.z,
-            AngAccX   : ang_acc.x,
-            AngAccY   : ang_acc.y,
-            AngAccZ   : ang_acc.z
-
+            AccZ      : accel.z
         };
         AP::logger().WriteBlock(&pkt, sizeof(pkt));
 }
@@ -63,6 +59,22 @@ void AP_InertialSensor::Write_IMU_instance(const uint64_t time_us, const uint8_t
         accel_rate : get_accel_rate_hz(imu_instance),
     };
     AP::logger().WriteBlock(&pkt, sizeof(pkt));
+}
+
+// Write ACC data packet: angular acceleration data 
+void AP_InertialSensor_Backend::Write_Ang_ACC(const uint8_t instance, const uint64_t sample_us, const Vector3f &ang_acc) const
+{
+        const uint64_t now = AP_HAL::micros64();
+        const struct log_Ang_ACC pkt {
+            LOG_PACKET_HEADER_INIT(LOG_ACC_MSG),
+            time_us   : now,
+            instance  : instance,
+            sample_us : sample_us?sample_us:now,
+            Ang_AccX      : ang_acc.x,
+            Ang_AccY      : ang_acc.y,
+            Ang_AccZ      : ang_acc.z
+        };
+        AP::logger().WriteBlock(&pkt, sizeof(pkt));
 }
 
 // Write IMU data packet for all instances

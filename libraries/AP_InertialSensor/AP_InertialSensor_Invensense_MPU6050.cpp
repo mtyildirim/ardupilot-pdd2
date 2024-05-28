@@ -110,6 +110,7 @@ AP_InertialSensor_Backend *AP_InertialSensor_InvensenseMPU6050::probe(AP_Inertia
         return nullptr;
     }
     sensor->_id = HAL_INS_MPU60XX_I2C;
+    
     return sensor;
 }
 
@@ -218,13 +219,26 @@ void AP_InertialSensor_InvensenseMPU6050::start()
     _register_write(MPUREG_GYRO_CONFIG, BITS_GYRO_FS_2000DPS, true);
     hal.scheduler->delay(1);
 
+    // read the product ID rev c has 1/2 the sensitivity of rev d
+    uint8_t product_id = _register_read(MPUREG_PRODUCT_ID);
 
-    // Accel scale 16g (2048 LSB/g)
-    _register_write(MPUREG_ACCEL_CONFIG,3<<3, true);
-    _accel_scale = GRAVITY_MSS / 2048.f;
-    _gyro_scale = (radians(1) / 16.4f);
-    
-    hal.scheduler->delay(1);
+    if (_mpu_type == Invensense_MPU6050 &&
+        ((product_id == MPU6000ES_REV_C4) ||
+         (product_id == MPU6000ES_REV_C5) ||
+         (product_id == MPU6000_REV_C4)   ||
+         (product_id == MPU6000_REV_C5))) {
+        // Accel scale 8g (4096 LSB/g)
+        // Rev C has different scaling than rev D
+        _register_write(MPUREG_ACCEL_CONFIG,1<<3, true);
+        _accel_scale = GRAVITY_MSS / 4096.f;
+        _gyro_scale = (radians(1) / 16.4f);
+    }
+    else {
+        // Accel scale 16g (2048 LSB/g)
+        _register_write(MPUREG_ACCEL_CONFIG,3<<3, true);
+        _accel_scale = GRAVITY_MSS / 2048.f;
+        _gyro_scale = (radians(1) / 16.4f);
+    }
 
     // configure interrupt to fire when new data arrives
     _register_write(MPUREG_INT_ENABLE, BIT_RAW_RDY_EN);
@@ -288,9 +302,13 @@ bool AP_InertialSensor_InvensenseMPU6050::update() /* front end */
     update_accel(_accel_instance);
     update_gyro(_gyro_instance);
 
-    // update ang_acc yazalım
+    // update ang_acc yazalım backend için 
 
 
+
+    //DEV_PRINTF("Error: can't passthrough when slave is already configured\n");
+
+    gcs().send_named_float("deneme_update",10.0f);
 
     _publish_temperature(_accel_instance, _temp_filtered);
 
@@ -334,7 +352,7 @@ AuxiliaryBus *AP_InertialSensor_InvensenseMPU6050::get_auxiliary_bus()
     if (_has_auxiliary_bus()) {
         _auxiliary_bus = new AP_Invensense_MPU6050_AuxiliaryBus(*this, _dev->get_bus_id());
     }
-
+    gcs().send_named_float("deneme_aux",10.0f);
     return _auxiliary_bus;
 }
 
@@ -647,8 +665,16 @@ check_registers:
     }
     _dev->set_speed(AP_HAL::Device::SPEED_HIGH);
 
-}
+    Vector3f ang_acc;
 
+    ang_acc.x=1;
+    ang_acc.y=2;
+    ang_acc.z=3;
+    Write_Ang_ACC(_accel_instance,0,ang_acc);
+    gcs().send_named_float("deneme_fifo",15.0f);
+
+}
+     
 /*
   fetch temperature in order to detect FIFO sync errors
 */
@@ -764,8 +790,9 @@ void AP_InertialSensor_InvensenseMPU6050::_set_filter_register(void)
 bool AP_InertialSensor_InvensenseMPU6050::_check_whoami(void)
 {
     uint8_t whoami = _register_read(MPUREG_WHOAMI);
-    if (whoami == 0x68)
+    if (whoami == MPU_WHOAMI_MPU6050)
     {
+        _mpu_type = Invensense_MPU6050;
         return true;
     }
     else { 
@@ -809,7 +836,7 @@ bool AP_InertialSensor_InvensenseMPU6050::_hardware_init(void)
         hal.scheduler->delay(100);
 
         /* bus-dependent initialization */
-        if ((_dev->bus_type() == AP_HAL::Device::BUS_TYPE_I2C)) {
+        if ((_dev->bus_type() == AP_HAL::Device::BUS_TYPE_I2C)&&(_mpu_type == Invensense_MPU6050 || Invensense_MPU6000)) {
             /* Enable I2C bypass to access internal device */
             _register_write(MPUREG_INT_PIN_CFG, BIT_BYPASS_EN);
         }
@@ -822,6 +849,9 @@ bool AP_InertialSensor_InvensenseMPU6050::_hardware_init(void)
 
         // check it has woken up
         if (_register_read(MPUREG_PWR_MGMT_1) == BIT_PWR_MGMT_1_CLK_ZGYRO) {
+
+                gcs().send_named_float("woken",10.0f);
+
             break;
         }
 

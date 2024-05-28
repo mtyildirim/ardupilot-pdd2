@@ -281,8 +281,8 @@ void AP_InertialSensor_Invensense::start()
         temp_zero = 21.0f;
         temp_sensitivity = 1.0f/340;
         break;
-    case Invensense_MPU6050:
     case Invensense_MPU6000:
+    case Invensense_MPU6050:
     case Invensense_MPU6500:
         temp_zero = 36.53f;
         temp_sensitivity = 1.0f/340;
@@ -951,8 +951,8 @@ bool AP_InertialSensor_Invensense::_check_whoami(void)
     uint8_t whoami = _register_read(MPUREG_WHOAMI);
     switch (whoami) {
     case MPU_WHOAMI_6000:
-        _mpu_type = Invensense_MPU6000;
-        _mpu_type = Invensense_MPU6050;
+        
+        //_mpu_type = Invensense_MPU6050;
         return true;
     case MPU_WHOAMI_6500:
         _mpu_type = Invensense_MPU6500;

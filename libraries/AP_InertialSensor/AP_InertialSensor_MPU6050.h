@@ -52,6 +52,18 @@ public:
     // get a startup banner to output to the GCS
     bool get_output_banner(char* banner, uint8_t banner_len) override;
 
+    enum Invensense_Type {
+        Invensense_MPU6000=0,
+        Invensense_MPU6500,
+        Invensense_MPU9250,
+        Invensense_ICM20608,
+        Invensense_ICM20602,
+        Invensense_ICM20601,
+        Invensense_ICM20789,
+        Invensense_ICM20689,
+        Invensense_MPU6050,
+    };
+
     // acclerometers on Invensense sensors will return values up to
     // 24G, but they are not guaranteed to be remotely linear past
     // 16G
@@ -132,6 +144,9 @@ private:
     AP_HAL::DigitalSource *_drdy_pin;
     AP_HAL::OwnPtr<AP_HAL::Device> _dev;
     AP_Invensense_MPU6050_AuxiliaryBus *_auxiliary_bus;
+
+        // which sensor type this is
+    enum Invensense_Type _mpu_type;
 
     // are we doing more than 1kHz sampling?
     bool _fast_sampling;

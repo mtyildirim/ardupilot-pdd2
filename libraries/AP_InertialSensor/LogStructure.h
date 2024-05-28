@@ -23,8 +23,25 @@ struct PACKED log_ACC {
     uint64_t time_us;
     uint8_t instance;
     uint64_t sample_us;
-    float AccX, AccY, AccZ,AngAccX,AngAccY,AngAccZ;
+    float AccX, AccY, AccZ;
 };
+
+// @LoggerMessage: Ang ACC
+// @Description: IMU angular accelerometer data
+// @Field: TimeUS: Time since system startup
+// @Field: I: accelerometer sensor instance number
+// @Field: SampleUS: time since system startup this sample was taken
+// @Field: Ang_AccX: angular acceleration along X axis
+// @Field: Ang_AccY: angular acceleration along Y axis
+// @Field: Ang_AccZ: angular acceleration along Z axis
+struct PACKED log_Ang_ACC {
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    uint8_t instance;
+    uint64_t sample_us;
+    float Ang_AccX, Ang_AccY, Ang_AccZ;
+};
+
 
 // @LoggerMessage: GYR
 // @Description: IMU gyroscope data
