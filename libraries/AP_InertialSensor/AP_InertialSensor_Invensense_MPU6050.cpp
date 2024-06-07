@@ -77,7 +77,7 @@ extern const AP_HAL::HAL& hal;
  *  See note below about accel scaling of engineering sample MPU6k
  *  variants however
  */
-
+/*
 AP_InertialSensor_InvensenseMPU6050::AP_InertialSensor_InvensenseMPU6050(AP_InertialSensor &imu,
                                                            AP_HAL::OwnPtr<AP_HAL::Device> dev,
                                                            enum Rotation rotation)
@@ -87,6 +87,26 @@ AP_InertialSensor_InvensenseMPU6050::AP_InertialSensor_InvensenseMPU6050(AP_Iner
     , _dev(std::move(dev))
 {
 }
+*/
+
+
+
+AP_InertialSensor_InvensenseMPU6050::AP_InertialSensor_InvensenseMPU6050(AP_InertialSensor &imu,
+                                                           AP_HAL::OwnPtr<AP_HAL::Device> dev,
+                                                           AP_HAL::OwnPtr<AP_HAL::Device> tca,
+                                                           uint8_t Channel,
+                                                           enum Rotation rotation)
+    : AP_InertialSensor_Backend(imu)
+    , _temp_filter(1000, 1)
+    , _rotation(rotation)
+    , _dev(std::move(dev))
+    , _tca(std::move(tca))
+    , channel(Channel)
+
+{
+}
+
+
 
 AP_InertialSensor_InvensenseMPU6050::~AP_InertialSensor_InvensenseMPU6050()
 {
@@ -98,18 +118,25 @@ AP_InertialSensor_InvensenseMPU6050::~AP_InertialSensor_InvensenseMPU6050()
 
 AP_InertialSensor_Backend *AP_InertialSensor_InvensenseMPU6050::probe(AP_InertialSensor &imu,
                                                                AP_HAL::OwnPtr<AP_HAL::I2CDevice> dev,
+                                                               AP_HAL::OwnPtr<AP_HAL::I2CDevice> tca,
+                                                               uint8_t Channel,
                                                                enum Rotation rotation)
 {
+
+    uint8_t control_register = 1 << Channel; // Create control byte for the channel
+
+    tca->transfer(&control_register, 1, nullptr, 0);
+
     if (!dev) {
         return nullptr;
     }
     AP_InertialSensor_InvensenseMPU6050 *sensor =
-        new AP_InertialSensor_InvensenseMPU6050(imu, std::move(dev), rotation);
+        new AP_InertialSensor_InvensenseMPU6050(imu, std::move(dev),std::move(tca),Channel,rotation);
     if (!sensor || !sensor->_init()) {
         delete sensor;
         return nullptr;
     }
-    sensor->_id = HAL_INS_MPU60XX_I2C;
+    sensor->_id = HAL_INS_MPU60XX_I2C_TCA;
     
     return sensor;
 }
@@ -182,6 +209,19 @@ bool AP_InertialSensor_InvensenseMPU6050::_has_auxiliary_bus()
 
 void AP_InertialSensor_InvensenseMPU6050::start()
 {
+    WITH_SEMAPHORE(_tca->get_semaphore());
+
+    // setup for register checking. We check much less often on I2C
+    // where the cost of the checks is higher
+    _tca->setup_checked_registers(13, _dev->bus_type() == AP_HAL::Device::BUS_TYPE_I2C?200:20);
+    
+    // initially run the bus at low speed
+    _tca->set_speed(AP_HAL::Device::SPEED_LOW);
+
+    uint8_t control_register = 1 << channel; // Create control byte for the channel
+
+    _tca->transfer(&control_register, 1, nullptr, 0);
+
     WITH_SEMAPHORE(_dev->get_semaphore());
 
     // initially run the bus at low speed
@@ -789,6 +829,11 @@ void AP_InertialSensor_InvensenseMPU6050::_set_filter_register(void)
  */
 bool AP_InertialSensor_InvensenseMPU6050::_check_whoami(void)
 {
+
+    uint8_t control_register = 1 << channel; // Create control byte for the channel
+
+    _tca->transfer(&control_register, 1, nullptr, 0);
+
     uint8_t whoami = _register_read(MPUREG_WHOAMI);
     if (whoami == MPU_WHOAMI_MPU6050)
     {
@@ -804,6 +849,19 @@ bool AP_InertialSensor_InvensenseMPU6050::_check_whoami(void)
 
 bool AP_InertialSensor_InvensenseMPU6050::_hardware_init(void)
 {
+    WITH_SEMAPHORE(_tca->get_semaphore());
+
+    // setup for register checking. We check much less often on I2C
+    // where the cost of the checks is higher
+    _tca->setup_checked_registers(13, _dev->bus_type() == AP_HAL::Device::BUS_TYPE_I2C?200:20);
+    
+    // initially run the bus at low speed
+    _tca->set_speed(AP_HAL::Device::SPEED_LOW);
+
+    uint8_t control_register = 1 << channel; // Create control byte for the channel
+
+    _tca->transfer(&control_register, 1, nullptr, 0);
+
     WITH_SEMAPHORE(_dev->get_semaphore());
 
     // setup for register checking. We check much less often on I2C
@@ -816,7 +874,7 @@ bool AP_InertialSensor_InvensenseMPU6050::_hardware_init(void)
     if (!_check_whoami()) {
         return false;
     }
-
+    
     // Chip reset
     uint8_t tries;
     for (tries = 0; tries < 5; tries++) {
@@ -1037,3 +1095,20 @@ AP_HAL::Device::PeriodicHandle AP_Invensense_MPU6050_AuxiliaryBus::register_peri
     auto &backend = AP_InertialSensor_InvensenseMPU6050::from(_ins_backend);
     return backend._dev->register_periodic_callback(period_usec, cb);
 }
+
+
+/*
+void AP_InertialSensor_InvensenseMPU6050::_tca_select_channel(uint8_t channel)
+{
+    if (channel > 7) {
+        hal.console->printf("Invalid TCA channel: %u\n", channel);
+        return;
+    }
+
+    uint8_t control_register = 1 << channel; // Create control byte for the channel
+
+    //_tca = hal.i2c_mgr->get_device(1, 0x70);
+    if (!_tca->transfer(&control_register, 1, nullptr, 0)) {
+        hal.console->printf("Failed to select TCA channel %u\n", channel);
+    }
+}*/

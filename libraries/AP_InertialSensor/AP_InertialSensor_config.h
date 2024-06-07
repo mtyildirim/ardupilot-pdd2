@@ -9,7 +9,7 @@
  */
 
 #ifndef INS_AUX_INSTANCES
-#define INS_AUX_INSTANCES 1
+#define INS_AUX_INSTANCES 3
 #endif
 
 #ifndef INS_MAX_INSTANCES

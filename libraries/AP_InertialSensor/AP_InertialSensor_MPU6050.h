@@ -27,6 +27,7 @@ class AP_InertialSensor_InvensenseMPU6050 : public AP_InertialSensor_Backend
 {
     friend AP_Invensense_MPU6050_AuxiliaryBus;
     friend AP_Invensense_MPU6050_AuxiliaryBusSlave;
+    friend AP_InertialSensor_InvensenseMPU6050_No1;
 
 public:
     virtual ~AP_InertialSensor_InvensenseMPU6050();
@@ -36,6 +37,8 @@ public:
 
     static AP_InertialSensor_Backend *probe(AP_InertialSensor &imu,
                                             AP_HAL::OwnPtr<AP_HAL::I2CDevice> dev,
+                                            AP_HAL::OwnPtr<AP_HAL::I2CDevice> tca,
+                                            uint8_t Channel,
                                             enum Rotation rotation);
 
     /* update accel and gyro state */
@@ -48,6 +51,10 @@ public:
     AuxiliaryBus *get_auxiliary_bus() override;
 
     void start() override;
+
+
+    // change i2c multiplexer channel 
+    void _tca_select_channel(uint8_t channel);
 
     // get a startup banner to output to the GCS
     bool get_output_banner(char* banner, uint8_t banner_len) override;
@@ -72,6 +79,8 @@ public:
 private:
     AP_InertialSensor_InvensenseMPU6050(AP_InertialSensor &imu,
                               AP_HAL::OwnPtr<AP_HAL::Device> dev,
+                              AP_HAL::OwnPtr<AP_HAL::Device> tca,
+                              uint8_t Channel,
                               enum Rotation rotation);
 
     /* Initialize sensor*/
@@ -143,7 +152,10 @@ private:
 
     AP_HAL::DigitalSource *_drdy_pin;
     AP_HAL::OwnPtr<AP_HAL::Device> _dev;
+    AP_HAL::OwnPtr<AP_HAL::Device> _tca;
     AP_Invensense_MPU6050_AuxiliaryBus *_auxiliary_bus;
+
+    uint8_t channel;
 
         // which sensor type this is
     enum Invensense_Type _mpu_type;
@@ -230,6 +242,15 @@ private:
     static const uint8_t MAX_EXT_SENS_DATA = 24;
     uint8_t _ext_sens_data = 0;
 };
+
+
+class AP_InertialSensor_InvensenseMPU6050_No1 : public AP_InertialSensor_InvensenseMPU6050
+{
+private:
+
+public:
+};
+
 
 #ifndef INS_INVENSENSE_20789_I2C_ADDR
 #define INS_INVENSENSE_20789_I2C_ADDR 0x68

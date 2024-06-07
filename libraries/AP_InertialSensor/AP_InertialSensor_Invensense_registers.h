@@ -223,3 +223,5 @@
 #define MPU6000_REV_D7                          0x57    // 0101			0111
 #define MPU6000_REV_D8                          0x58    // 0101			1000
 #define MPU6000_REV_D9                          0x59    // 0101			1001
+
+#define TCAADRESS                   0x70

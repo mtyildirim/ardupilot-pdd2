@@ -1137,7 +1137,10 @@ AP_InertialSensor::detect_backends(void)
     switch (AP_BoardConfig::get_board_type()) {
     case AP_BoardConfig::PX4_BOARD_PX4V1:
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU60x0_NAME), ROTATION_NONE));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_NONE));
         break;
 
     case AP_BoardConfig::PX4_BOARD_PIXHAWK:
@@ -1148,7 +1151,12 @@ AP_InertialSensor::detect_backends(void)
                                                       ROTATION_ROLL_180,
                                                       ROTATION_ROLL_180_YAW_270,
                                                       ROTATION_PITCH_180));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), ROTATION_NONE));                                           
+
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_NONE));
+
         break;
 
     case AP_BoardConfig::PX4_BOARD_PIXHAWK2:
@@ -1162,7 +1170,12 @@ AP_InertialSensor::detect_backends(void)
                                                       ROTATION_ROLL_180_YAW_90,
                                                       ROTATION_ROLL_180_YAW_90));
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_NAME), ROTATION_YAW_270));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), ROTATION_NONE));
+
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_NONE));
+
         // new cubes have ICM20602, ICM20948, ICM20649
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device("icm20602_ext"), ROTATION_ROLL_180_YAW_270));
         ADD_BACKEND(AP_InertialSensor_Invensensev2::probe(*this, hal.spi->get_device("icm20948_ext"), ROTATION_PITCH_180));
