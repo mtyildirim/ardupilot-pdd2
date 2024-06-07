@@ -27,7 +27,6 @@ class AP_InertialSensor_InvensenseMPU6050 : public AP_InertialSensor_Backend
 {
     friend AP_Invensense_MPU6050_AuxiliaryBus;
     friend AP_Invensense_MPU6050_AuxiliaryBusSlave;
-    friend AP_InertialSensor_InvensenseMPU6050_No1;
 
 public:
     virtual ~AP_InertialSensor_InvensenseMPU6050();
@@ -243,13 +242,6 @@ private:
     uint8_t _ext_sens_data = 0;
 };
 
-
-class AP_InertialSensor_InvensenseMPU6050_No1 : public AP_InertialSensor_InvensenseMPU6050
-{
-private:
-
-public:
-};
 
 
 #ifndef INS_INVENSENSE_20789_I2C_ADDR
