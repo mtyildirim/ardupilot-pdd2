@@ -192,7 +192,6 @@ private:
         Vector3f gyro;
         uint8_t accel_count;
         uint8_t gyro_count;
-        Vector3f ang_acc;
         LowPassFilterVector3f accel_filter{4000, 188};
     } _accum;
 };
@@ -242,7 +241,7 @@ private:
     uint8_t _ext_sens_data = 0;
 };
 
-
+#define ARMLENGHT 16.0f
 
 #ifndef INS_INVENSENSE_20789_I2C_ADDR
 #define INS_INVENSENSE_20789_I2C_ADDR 0x68

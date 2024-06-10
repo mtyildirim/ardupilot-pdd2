@@ -113,6 +113,12 @@ public:
     ///
     const Vector3f     &get_ang_acc(void) const { return _ang_acc; }
 
+    /// Calculate current angular acceleration values
+    ///
+    /// @returns	vector of rotational rates in radians/second square
+    ///
+    void                calculate_ang_acc(void);
+
     // set gyro offsets in radians/sec
     const Vector3f &get_gyro_offsets(uint8_t i) const { return _gyro_offset(i); }
     const Vector3f &get_gyro_offsets(void) const { return get_gyro_offsets(_primary_gyro); }

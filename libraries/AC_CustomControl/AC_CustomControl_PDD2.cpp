@@ -64,16 +64,17 @@ Vector3f AC_CustomControl_PDD2::update()
     Vector3f EulerOrientation,EulerTargets,Angular_Accelerations;
 
     _ahrs->get_quat_body_to_ned(attitude_body);
-    EulerOrientation[0]= _ahrs->get_roll();
-    EulerOrientation[1]= _ahrs->get_pitch();
-    EulerOrientation[2]= _ahrs->get_yaw();
+    attitude_body.to_euler(EulerOrientation.x, EulerOrientation.y, EulerOrientation.z);
 
-    EulerTargets[0] = _pos_control->get_roll_cd();
-    EulerTargets[1] = _pos_control->get_pitch_cd();
-    EulerTargets[2] = _pos_control->get_yaw_cd();
+    //EulerOrientation.x= _ahrs->get_roll();
+    //EulerOrientation.y= _ahrs->get_pitch();                //bunlardeğil
+    //EulerOrientation.z= _ahrs->get_yaw();
+
+    EulerTargets.x = _pos_control->get_roll_cd();
+    EulerTargets.y = _pos_control->get_pitch_cd();
+    EulerTargets.z = _pos_control->get_yaw_cd();
 
     Angular_Accelerations = _ahrs->get_ang_acc();
-
     attitude_target = _att_control->get_attitude_target_quat();
     // This vector represents the angular error to rotate the thrust vector using x and y and heading using z
     Vector3f attitude_error;
@@ -84,9 +85,9 @@ Vector3f AC_CustomControl_PDD2::update()
     // run rate controller
     Vector3f gyro_latest = _ahrs->get_gyro_latest();
     Vector3f motor_out;
-    motor_out.x = _pdd2_atti_rate_roll.update_all(EulerTargets[0], EulerOrientation[0], gyro_latest[0],Angular_Accelerations[0],1);
-    motor_out.y = _pdd2_atti_rate_pitch.update_all(EulerTargets[1], EulerOrientation[1], gyro_latest[1],Angular_Accelerations[1],1);
-    motor_out.z = _pdd2_atti_rate_yaw.update_all(EulerTargets[2], EulerOrientation[2], gyro_latest[2],Angular_Accelerations[2],1);
+    motor_out.x = _pdd2_atti_rate_roll.update_all(EulerTargets.x, EulerOrientation.x, gyro_latest.x,Angular_Accelerations.x,1);
+    motor_out.y = _pdd2_atti_rate_pitch.update_all(EulerTargets.y, EulerOrientation.y, gyro_latest.y,Angular_Accelerations.y,1);
+    motor_out.z = _pdd2_atti_rate_yaw.update_all(EulerTargets.z, EulerOrientation.z, gyro_latest.z,Angular_Accelerations.z,1);
 
     return motor_out;
 }

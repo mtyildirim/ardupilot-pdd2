@@ -1824,6 +1824,10 @@ void AP_InertialSensor::update(void)
             }
         }
 
+    calculate_ang_acc();
+
+
+    
     _last_update_usec = AP_HAL::micros();
     
     _have_sample = false;
@@ -2575,6 +2579,27 @@ void AP_InertialSensor::force_save_calibration(void)
     }
 }
 
+void AP_InertialSensor::calculate_ang_acc(void)
+{
+    Vector3f first_accel,second_accel,third_accel,fourth_accel ;
+
+    first_accel = get_accel(3);
+    second_accel = get_accel(4);
+    third_accel = get_accel(5);
+    fourth_accel = get_accel(6);
+
+    _ang_acc.x =  (-first_accel.z + second_accel.z + third_accel.z - fourth_accel.z)/ARMLENGHT;
+    _ang_acc.y =  (-first_accel.z + second_accel.z - third_accel.z + fourth_accel.z)/ARMLENGHT;
+    _ang_acc.z =  ( first_accel.y + second_accel.y - third_accel.y - fourth_accel.y)/ARMLENGHT;
+
+
+    gcs().send_named_float("deneme ang acc x ",_ang_acc.x);
+    gcs().send_named_float("deneme ang acc y ",_ang_acc.y);
+    gcs().send_named_float("deneme ang acc z ",_ang_acc.z);
+
+
+
+}
 namespace AP {
 
 AP_InertialSensor &ins()

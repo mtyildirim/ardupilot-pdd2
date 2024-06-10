@@ -6,8 +6,8 @@
 
 
 #include "AC_CustomControl_Backend.h"
-// #include "AC_CustomControl_Empty.h"
-#include "AC_CustomControl_PID.h"
+//#include "AC_CustomControl_Empty.h"
+//#include "AC_CustomControl_PID.h"
 #include "AC_CustomControl_PDD2.h"
 #include <GCS_MAVLink/GCS.h>
 
@@ -68,7 +68,7 @@ void AC_CustomControl::init(void)
             break;
 
         case CustomControlType::CONT_PDD2:
-            _backend = new AC_CustomControl_PDD2(*this, _ahrs, _att_control, _motors, _dt);
+            _backend = new AC_CustomControl_PDD2(*this, _ahrs, _att_control,_pos_control ,_motors, _dt);
             _backend_var_info[get_type()] = AC_CustomControl_PDD2::var_info;
             break;
 
@@ -89,7 +89,10 @@ void AC_CustomControl::update(void)
 
         motor_out_rpy = _backend->update();
 
-        motor_set(motor_out_rpy);
+        _motors->set_roll(motor_out_rpy.x);
+        _motors->set_pitch(motor_out_rpy.y);
+        _motors->set_yaw(motor_out_rpy.z);
+        //motor_set(motor_out_rpy);
     }
 }
 

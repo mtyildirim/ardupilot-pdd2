@@ -341,14 +341,8 @@ bool AP_InertialSensor_InvensenseMPU6050::update() /* front end */
 {
     update_accel(_accel_instance);
     update_gyro(_gyro_instance);
-
-    // update ang_acc yazalım backend için 
-
-
-
+    
     //DEV_PRINTF("Error: can't passthrough when slave is already configured\n");
-
-    gcs().send_named_float("deneme_update",10.0f);
 
     _publish_temperature(_accel_instance, _temp_filtered);
 
@@ -392,7 +386,6 @@ AuxiliaryBus *AP_InertialSensor_InvensenseMPU6050::get_auxiliary_bus()
     if (_has_auxiliary_bus()) {
         _auxiliary_bus = new AP_Invensense_MPU6050_AuxiliaryBus(*this, _dev->get_bus_id());
     }
-    gcs().send_named_float("deneme_aux",10.0f);
     return _auxiliary_bus;
 }
 
@@ -711,7 +704,6 @@ check_registers:
     ang_acc.y=2;
     ang_acc.z=3;
     Write_Ang_ACC(_accel_instance,0,ang_acc);
-    gcs().send_named_float("deneme_fifo",15.0f);
 
 }
      
@@ -907,9 +899,6 @@ bool AP_InertialSensor_InvensenseMPU6050::_hardware_init(void)
 
         // check it has woken up
         if (_register_read(MPUREG_PWR_MGMT_1) == BIT_PWR_MGMT_1_CLK_ZGYRO) {
-
-                gcs().send_named_float("woken",10.0f);
-
             break;
         }
 
