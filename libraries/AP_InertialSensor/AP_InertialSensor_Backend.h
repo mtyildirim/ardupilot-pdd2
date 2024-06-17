@@ -60,6 +60,13 @@ public:
      */
     virtual void start() { }
 
+
+
+
+
+    void Write_ANG_ACC(const uint64_t sample_us, const Vector3f &ang_acc) const __RAMFUNC__;
+    void log_ang_acc_raw(const uint64_t sample_us, const Vector3f &ang_acc) __RAMFUNC__;
+
     /*
      * Return an AuxiliaryBus if backend has another bus it is able to export
      */
@@ -128,8 +135,6 @@ public:
     };
 
 
-
-void Write_Ang_ACC(const uint8_t instance, const uint64_t sample_us,const Vector3f &ang_acc)const __RAMFUNC__;// Write Angular ACC data packet: raw ang acc data
 
 protected:
     // access to frontend

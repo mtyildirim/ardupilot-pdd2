@@ -34,13 +34,12 @@ struct PACKED log_ACC {
 // @Field: Ang_AccX: angular acceleration along X axis
 // @Field: Ang_AccY: angular acceleration along Y axis
 // @Field: Ang_AccZ: angular acceleration along Z axis
-struct PACKED log_Ang_ACC {
+    struct PACKED log_ANG_ACC {
     LOG_PACKET_HEADER;
     uint64_t time_us;
-    uint8_t instance;
     uint64_t sample_us;
-    float Ang_AccX, Ang_AccY, Ang_AccZ;
-};
+    float AngAccX, AngAccY, AngAccZ;
+    };
 
 
 // @LoggerMessage: GYR

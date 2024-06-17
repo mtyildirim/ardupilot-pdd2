@@ -697,14 +697,6 @@ check_registers:
         _inc_accel_error_count(_accel_instance);
     }
     _dev->set_speed(AP_HAL::Device::SPEED_HIGH);
-
-    Vector3f ang_acc;
-
-    ang_acc.x=1;
-    ang_acc.y=2;
-    ang_acc.z=3;
-    Write_Ang_ACC(_accel_instance,0,ang_acc);
-
 }
      
 /*
