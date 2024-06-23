@@ -6,23 +6,189 @@
 
 // table of user settable parameters
 const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
-    // @Param: PARAM1
-    // @DisplayName: PDD2 param1
-    // @Description: Dumy parameter for PDD2 custom controller backend
-    // @User: Advanced
-    AP_SUBGROUPINFO(_pdd2_atti_rate_roll,"PDD2_1", 1, AC_CustomControl_PDD2,AC_PDD2),
+    // @Param: PDD2_RLL_P
+    // @DisplayName: Roll axis PDD2 controller P gain
+    // @Description: Roll axis PDD2 controller P gain.  Corrects in proportion to the difference between the desired roll rate vs actual roll rate
+    // @Range: 0.01 0.5
+    // @Increment: 0.005
+    // @User: Standard
 
-    // @Param: PARAM2
-    // @DisplayName: PDD2 param2
-    // @Description: Dumy parameter for PDD2 custom controller backend
-    // @User: Advanced
-    AP_SUBGROUPINFO(_pdd2_atti_rate_pitch,"PDD2_2", 2, AC_CustomControl_PDD2,AC_PDD2),
+    // @Param: PDD2_RLL_D
+    // @DisplayName: Roll axis PDD2 controller D gain
+    // @Description: Roll axis PDD2 controller D gain.  Compensates for short-term change in desired roll rate vs actual roll rate
+    // @Range: 0.0 0.05
+    // @Increment: 0.001
+    // @User: Standard
 
-    // @Param: PARAM3
-    // @DisplayName: PDD2 param3
-    // @Description: Dumy parameter for PDD2 custom controller backend
+    // @Param: PDD2_RLL_D2
+    // @DisplayName: Roll axis PDD2 controller D2 gain
+    // @Description: Roll axis PDD2 controller D2 gain.  Corrects long-term difference in desired roll rate vs actual roll rate
+    // @Range: 0.001 0.02
+    // @Increment: 0.001
+    // @User: Standard
+
+    // @Param: PDD2_RLL_FLTT
+    // @DisplayName: Roll axis rate controller target frequency in Hz
+    // @Description: Roll axis rate controller target frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_RLL_FLTE
+    // @DisplayName: Roll axis rate controller error frequency in Hz
+    // @Description: Roll axis rate controller error frequency in Hz
+    // @Range: 0 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_RLL_FLTD
+    // @DisplayName: Roll axis rate controller derivative frequency in Hz
+    // @Description: Roll axis rate controller derivative frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_RLL_FLTD2
+    // @DisplayName: Roll axis rate controller derivative 2 frequency in Hz
+    // @Description: Roll axis rate controller derivative 2 frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_RLL_SMAX
+    // @DisplayName: Roll slew rate limit
+    // @Description: Sets an upper limit on the slew rate produced by the combined P and D gains. If the amplitude of the control action produced by the rate feedback exceeds this value, then the D+P gain is reduced to respect the limit. This limits the amplitude of high frequency oscillations caused by an excessive gain. The limit should be set to no more than 25% of the actuators maximum slew rate to allow for load effects. Note: The gain will not be reduced to less than 10% of the nominal value. A value of zero will disable this feature.
+    // @Range: 0 200
+    // @Increment: 0.5
     // @User: Advanced
-    AP_SUBGROUPINFO(_pdd2_atti_rate_yaw,"PDD2_3", 3, AC_CustomControl_PDD2,AC_PDD2),
+
+    AP_SUBGROUPINFO(_pdd2_atti_rate_roll,"PDD2_Roll", 1, AC_CustomControl_PDD2,AC_PDD2),
+
+    // @Param: PDD2_PIT_P
+    // @DisplayName: Pitch axis PDD2 controller P gain
+    // @Description: Pitch axis PDD2 controller P gain.  Corrects in proportion to the difference between the desired Pitch rate vs actual Pitch rate
+    // @Range: 0.01 0.5
+    // @Increment: 0.005
+    // @User: Standard
+
+    // @Param: PDD2_PIT_D
+    // @DisplayName: Pitch axis PDD2 controller D gain
+    // @Description: Pitch axis PDD2 controller D gain.  Compensates for short-term change in desired Pitch rate vs actual Pitch rate
+    // @Range: 0.0 0.05
+    // @Increment: 0.001
+    // @User: Standard
+
+    // @Param: PDD2_PIT_D2
+    // @DisplayName: Pitch axis PDD2 controller D2 gain
+    // @Description: Pitch axis PDD2 controller D2 gain.  Corrects long-term difference in desired Pitch rate vs actual Pitch rate
+    // @Range: 0.001 0.02
+    // @Increment: 0.001
+    // @User: Standard
+
+    // @Param: PDD2_PIT_FLTT
+    // @DisplayName: Pitch axis rate controller target frequency in Hz
+    // @Description: Pitch axis rate controller target frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_PIT_FLTE
+    // @DisplayName: Pitch axis rate controller error frequency in Hz
+    // @Description: Pitch axis rate controller error frequency in Hz
+    // @Range: 0 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_PIT_FLTD
+    // @DisplayName: Pitch axis rate controller derivative frequency in Hz
+    // @Description: Pitch axis rate controller derivative frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_PIT_FLTD2
+    // @DisplayName: Pitch axis rate controller derivative 2 frequency in Hz
+    // @Description: Pitch axis rate controller derivative 2 frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_PIT_SMAX
+    // @DisplayName: Pitch slew rate limit
+    // @Description: Sets an upper limit on the slew rate produced by the combined P and D gains. If the amplitude of the control action produced by the rate feedback exceeds this value, then the D+P gain is reduced to respect the limit. This limits the amplitude of high frequency oscillations caused by an excessive gain. The limit should be set to no more than 25% of the actuators maximum slew rate to allow for load effects. Note: The gain will not be reduced to less than 10% of the nominal value. A value of zero will disable this feature.
+    // @Range: 0 200
+    // @Increment: 0.5
+    // @User: Advanced
+    AP_SUBGROUPINFO(_pdd2_atti_rate_pitch,"PDD2_Pitch", 2, AC_CustomControl_PDD2,AC_PDD2),
+
+    // @Param: PDD2_YAW_P
+    // @DisplayName: Yaw axis PDD2 controller P gain
+    // @Description: Yaw axis PDD2 controller P gain.  Corrects in proportion to the difference between the desired Yaw rate vs actual Yaw rate
+    // @Range: 0.01 0.5
+    // @Increment: 0.005
+    // @User: Standard
+
+    // @Param: PDD2_YAW_D
+    // @DisplayName: Yaw axis PDD2 controller D gain
+    // @Description: Yaw axis PDD2 controller D gain.  Compensates for short-term change in desired Yaw rate vs actual Yaw rate
+    // @Range: 0.0 0.05
+    // @Increment: 0.001
+    // @User: Standard
+
+    // @Param: PDD2_YAW_D2
+    // @DisplayName: Yaw axis PDD2 controller D2 gain
+    // @Description: Yaw axis PDD2 controller D2 gain.  Corrects long-term difference in desired Yaw rate vs actual Yaw rate
+    // @Range: 0.001 0.02
+    // @Increment: 0.001
+    // @User: Standard
+
+    // @Param: PDD2_YAW_FLTT
+    // @DisplayName: Yaw axis rate controller target frequency in Hz
+    // @Description: Yaw axis rate controller target frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_YAW_FLTE
+    // @DisplayName: Yaw axis rate controller error frequency in Hz
+    // @Description: Yaw axis rate controller error frequency in Hz
+    // @Range: 0 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_YAW_FLTD
+    // @DisplayName: Yaw axis rate controller derivative frequency in Hz
+    // @Description: Yaw axis rate controller derivative frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_YAW_FLTD2
+    // @DisplayName: Yaw axis rate controller derivative 2 frequency in Hz
+    // @Description: Yaw axis rate controller derivative 2 frequency in Hz
+    // @Range: 5 100
+    // @Increment: 1
+    // @Units: Hz
+    // @User: Standard
+
+    // @Param: PDD2_YAW_SMAX
+    // @DisplayName: Yaw slew rate limit
+    // @Description: Sets an upper limit on the slew rate produced by the combined P and D gains. If the amplitude of the control action produced by the rate feedback exceeds this value, then the D+P gain is reduced to respect the limit. This limits the amplitude of high frequency oscillations caused by an excessive gain. The limit should be set to no more than 25% of the actuators maximum slew rate to allow for load effects. Note: The gain will not be reduced to less than 10% of the nominal value. A value of zero will disable this feature.
+    // @Range: 0 200
+    // @Increment: 0.5
+    // @User: Advanced
+    AP_SUBGROUPINFO(_pdd2_atti_rate_yaw,"PDD2_Yaw", 3, AC_CustomControl_PDD2,AC_PDD2),
 
     AP_GROUPEND
 };
@@ -30,9 +196,9 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
 // initialize in the constructor
 AC_CustomControl_PDD2::AC_CustomControl_PDD2(AC_CustomControl& frontend, AP_AHRS*& ahrs, AC_AttitudeControl_Multi*& att_control, AC_PosControl*& pos_control , AP_MotorsMulticopter*& motors, float dt) :
     AC_CustomControl_Backend(frontend, ahrs, att_control, pos_control ,motors, dt),
-    _pdd2_atti_rate_roll(AC_PDD2_DEFAULT_P_ROLL,AC_PDD2_DEFAULT_D_ROLL,AC_PDD2_DEFAULT_D2_ROLL,0,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT),
-    _pdd2_atti_rate_pitch(AC_PDD2_DEFAULT_P_PITCH,AC_PDD2_DEFAULT_D_PITCH,AC_PDD2_DEFAULT_D2_PITCH,0,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT),
-    _pdd2_atti_rate_yaw(AC_PDD2_DEFAULT_P_YAW,AC_PDD2_DEFAULT_D_YAW,AC_PDD2_DEFAULT_D2_YAW,0,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT)
+    _pdd2_atti_rate_roll(AC_PDD2_DEFAULT_P_ROLL,AC_PDD2_DEFAULT_D_ROLL,AC_PDD2_DEFAULT_D2_ROLL,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT),
+    _pdd2_atti_rate_pitch(AC_PDD2_DEFAULT_P_PITCH,AC_PDD2_DEFAULT_D_PITCH,AC_PDD2_DEFAULT_D2_PITCH,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT),
+    _pdd2_atti_rate_yaw(AC_PDD2_DEFAULT_P_YAW,AC_PDD2_DEFAULT_D_YAW,AC_PDD2_DEFAULT_D2_YAW,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT)
 {
     AP_Param::setup_object_defaults(this, var_info);
 }

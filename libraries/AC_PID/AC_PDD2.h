@@ -10,27 +10,6 @@
 #include <Filter/SlewLimiter.h>
 
 
-
-#define AC_PDD2_DEFAULT_P_ROLL    1.0f
-#define AC_PDD2_DEFAULT_D_ROLL    0.25f
-#define AC_PDD2_DEFAULT_D2_ROLL   0.02f
-
-#define AC_PDD2_DEFAULT_P_PITCH   1.0f
-#define AC_PDD2_DEFAULT_D_PITCH   0.25f
-#define AC_PDD2_DEFAULT_D2_PITCH  0.02f
-
-#define AC_PDD2_DEFAULT_P_YAW     1.0f
-#define AC_PDD2_DEFAULT_D_YAW     0.25f
-#define AC_PDD2_DEFAULT_D2_YAW    0.02f
-
-
-
-#define AC_PDD2_TFILT_HZ_DEFAULT  0.0f   // default input filter frequency
-#define AC_PDD2_EFILT_HZ_DEFAULT  0.0f   // default input filter frequency
-#define AC_PDD2_DFILT_HZ_DEFAULT  20.0f   // default input filter frequency
-#define AC_PDD2_D2FILT_HZ_DEFAULT 20.0f   // default input filter frequency
-#define AC_PDD2_RESET_TC          0.16f   // Time constant for integrator reset decay to zero
-
 #include "AP_PIDInfo.h"
 
 /// @class	AC_PDD2
@@ -39,7 +18,7 @@ class AC_PDD2 {
 public:
 
     // Constructor for PDD2
-    AC_PDD2(float initial_p, float initial_d, float initial_d2, float initial_ff, float initial_filt_T_hz, float initial_filt_E_hz, float initial_filt_D_hz,float initial_filt_D2_hz,
+    AC_PDD2(float initial_p, float initial_d, float initial_d2, float initial_filt_T_hz, float initial_filt_E_hz, float initial_filt_D_hz,float initial_filt_D2_hz,
            float initial_srmax=0, float initial_srtau=1.0);
 
     CLASS_NO_COPY(AC_PDD2);
@@ -63,7 +42,6 @@ public:
     float get_p() const;
     float get_d() const;
     float get_d2() const;
-    float get_ff();
 
 
     // reset_filter - input filter will be reset to the next value provided to set_input()
@@ -78,13 +56,12 @@ public:
     void save_gains();
 
     /// operator function call for easy initialisation
-    void operator()(float p_val, float d_val, float d2_val, float ff_val, float input_filt_T_hz, float input_filt_E_hz, float input_filt_D_hz,float input_filt_D2_hz);
+    void operator()(float p_val, float d_val, float d2_val, float input_filt_T_hz, float input_filt_E_hz, float input_filt_D_hz,float input_filt_D2_hz);
 
     // get accessors
     AP_Float &kP() { return _kp; }
     AP_Float &kD() { return _kd; }
     AP_Float &kD2() { return _kd2; }
-    AP_Float &ff() { return _kff;}
     AP_Float &filt_T_hz() { return _filt_T_hz; }
     AP_Float &filt_E_hz() { return _filt_E_hz; }
     AP_Float &filt_D_hz() { return _filt_D_hz; }
@@ -98,7 +75,6 @@ public:
     void kP(const float v) { _kp.set(v); }
     void kD(const float v) { _kd.set(v); }
     void kD2(const float v) { _kd2.set(v); }
-    void ff(const float v) { _kff.set(v); }
     void filt_T_hz(const float v);
     void filt_E_hz(const float v);
     void filt_D_hz(const float v);
@@ -132,11 +108,10 @@ protected:
     AP_Float _kp;
     AP_Float _kd;
     AP_Float _kd2;
-    AP_Float _kff;
     AP_Float _filt_T_hz;         // PDD2 target filter frequency in Hz
     AP_Float _filt_E_hz;         // PDD2 error filter frequency in Hz
     AP_Float _filt_D_hz;         // PDD2 derivative filter frequency in Hz
-    AP_Float _filt_D2_hz;
+    AP_Float _filt_D2_hz;        // PDD2 derivative filter frequency 2 in Hz
     AP_Float _slew_rate_max;
 
     SlewLimiter _slew_limiter{_slew_rate_max, _slew_rate_tau};
@@ -160,7 +135,6 @@ private:
     const float default_kp;
     const float default_kd;
     const float default_kd2;
-    const float default_kff;
     const float default_filt_T_hz;
     const float default_filt_E_hz;
     const float default_filt_D_hz;

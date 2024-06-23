@@ -22,11 +22,6 @@ const AP_Param::GroupInfo AC_PDD2::var_info[] = {
 
     // 3 was for uint16 IMAX
 
-    // @Param: FF
-    // @DisplayName: FF FeedForward Gain
-    // @Description: FF Gain which produces an output value that is proportional to the demanded input
-    AP_GROUPINFO_FLAGS_DEFAULT_POINTER("FF", 3, AC_PDD2, _kff, default_kff),
-
     // 6 was for float FILT
 
     // 7 is for float ILMI and FF
@@ -69,12 +64,11 @@ const AP_Param::GroupInfo AC_PDD2::var_info[] = {
 };
 
 // Constructor
-AC_PDD2::AC_PDD2(float initial_p, float initial_d, float initial_d2, float initial_ff, float initial_filt_T_hz, float initial_filt_E_hz, float initial_filt_D_hz,
+AC_PDD2::AC_PDD2(float initial_p, float initial_d, float initial_d2, float initial_filt_T_hz, float initial_filt_E_hz, float initial_filt_D_hz,
                float initial_filt_D2_hz, float initial_srmax, float initial_srtau) :
     default_kp(initial_p),
     default_kd(initial_d),
     default_kd2(initial_d2),
-    default_kff(initial_ff),
     default_filt_T_hz(initial_filt_T_hz),
     default_filt_E_hz(initial_filt_E_hz),
     default_filt_D_hz(initial_filt_D_hz),
@@ -258,18 +252,11 @@ float AC_PDD2::get_d2() const
     return _kd2 * _derivative2;
 }
 
-float AC_PDD2::get_ff()
-{
-    _PDD2_info.FF = _target * _kff;
-    return _target * _kff;
-}
-
 void AC_PDD2::load_gains()
 {
     _kp.load();
     _kd.load();
     _kd2.load();
-    _kff.load();
     _filt_T_hz.load();
     _filt_E_hz.load();
     _filt_D_hz.load();
@@ -281,19 +268,17 @@ void AC_PDD2::save_gains()
     _kp.save();
     _kd.save();
     _kd2.save();
-    _kff.save();
     _filt_T_hz.save();
     _filt_E_hz.save();
     _filt_D_hz.save();
 }
 
 /// Overload the function call operator to permit easy initialisation
-void AC_PDD2::operator()(float p_val, float d_val, float d2_val, float ff_val, float input_filt_T_hz, float input_filt_E_hz, float input_filt_D_hz,float input_filt_D2_hz)
+void AC_PDD2::operator()(float p_val, float d_val, float d2_val, float input_filt_T_hz, float input_filt_E_hz, float input_filt_D_hz,float input_filt_D2_hz)
 {
     _kp.set(p_val);
     _kd.set(d_val);
     _kd2.set(d2_val);
-    _kff.set(ff_val);
     _filt_T_hz.set(input_filt_T_hz);
     _filt_E_hz.set(input_filt_E_hz);
     _filt_D_hz.set(input_filt_D_hz);
