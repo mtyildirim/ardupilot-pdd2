@@ -21,7 +21,7 @@ class AC_CustomControl_Backend;
 
 class AC_CustomControl {
 public:
-    AC_CustomControl(AP_AHRS*& ahrs, AC_AttitudeControl_Multi*& _att_control,AC_PosControl*& _pos_control ,AP_MotorsMulticopter*& motors, float dt);
+    AC_CustomControl(AP_AHRS_View*& ahrs, AC_AttitudeControl_Multi*& _att_control,AC_PosControl*& _pos_control ,AP_MotorsMulticopter*& motors, float dt);
 
     CLASS_NO_COPY(AC_CustomControl);  /* Do not allow copies */
 
@@ -60,7 +60,7 @@ protected:
     bool _custom_controller_active;
 
     // References to external libraries
-    AP_AHRS*& _ahrs;
+    AP_AHRS_View*& _ahrs;
     AC_AttitudeControl_Multi*& _att_control;
     AC_PosControl*& _pos_control;
     AP_MotorsMulticopter*& _motors;

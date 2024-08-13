@@ -89,7 +89,7 @@ public:
 
     // get current angular accelerations
 
-    const Vector3f &get_ang_acc(void) const;
+    const Vector3f     &get_ang_acc(void) const;
 
     // dead-reckoning support
     bool get_location(Location &loc) const;
@@ -705,6 +705,7 @@ private:
     Vector3f _gyro_estimate;
     Vector3f _accel_ef;
     Vector3f _accel_bias;
+    Vector3f _ang_acc;
 
     const uint16_t startup_delay_ms = 1000;
     uint32_t start_time_ms;

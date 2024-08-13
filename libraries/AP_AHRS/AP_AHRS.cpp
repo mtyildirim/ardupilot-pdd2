@@ -287,6 +287,11 @@ const Vector3f &AP_AHRS::get_gyro_drift(void) const
     return _gyro_drift;
 }
 
+const Vector3f &AP_AHRS::get_ang_acc(void) const 
+{
+    return _ang_acc;
+}
+
 // reset the current gyro drift estimate
 //  should be called if gyro offsets are recalculated
 void AP_AHRS::reset_gyro_drift(void)
@@ -545,6 +550,8 @@ void AP_AHRS::update_EKF2(void)
             accel.z -= abias;
             _accel_ef = _dcm_matrix * get_rotation_autopilot_body_to_vehicle_body() * accel;
 
+            _ang_acc = _ins.get_ang_acc();
+
             nav_filter_status filt_state;
             EKF2.getFilterStatus(filt_state);
             update_notify_from_filter_status(filt_state);
@@ -611,6 +618,8 @@ void AP_AHRS::update_EKF3(void)
             Vector3f accel = _ins.get_accel(primary_accel);
             accel -= abias;
             _accel_ef = _dcm_matrix * get_rotation_autopilot_body_to_vehicle_body() * accel;
+
+            _ang_acc = _ins.get_ang_acc();
 
             nav_filter_status filt_state;
             EKF3.getFilterStatus(filt_state);

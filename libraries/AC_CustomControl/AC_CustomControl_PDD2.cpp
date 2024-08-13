@@ -25,7 +25,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Description: Roll axis PDD2 controller D2 gain.  Corrects long-term difference in desired roll rate vs actual roll rate
     // @Range: 0.001 0.02
     // @Increment: 0.001
-    // @User: Standard
+    // @User: Advanced
 
     // @Param: PDD2_RLL_FLTT
     // @DisplayName: Roll axis rate controller target frequency in Hz
@@ -57,7 +57,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Range: 5 100
     // @Increment: 1
     // @Units: Hz
-    // @User: Standard
+    // @User: Advanced
 
     // @Param: PDD2_RLL_SMAX
     // @DisplayName: Roll slew rate limit
@@ -66,7 +66,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Increment: 0.5
     // @User: Advanced
 
-    AP_SUBGROUPINFO(_pdd2_atti_rate_roll,"PDD2_Roll", 1, AC_CustomControl_PDD2,AC_PDD2),
+    AP_SUBGROUPINFO(_pdd2_atti_rate_roll,"PDD2_Roll", 0, AC_CustomControl_PDD2,AC_PDD2),
 
     // @Param: PDD2_PIT_P
     // @DisplayName: Pitch axis PDD2 controller P gain
@@ -87,7 +87,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Description: Pitch axis PDD2 controller D2 gain.  Corrects long-term difference in desired Pitch rate vs actual Pitch rate
     // @Range: 0.001 0.02
     // @Increment: 0.001
-    // @User: Standard
+    // @User: Advanced
 
     // @Param: PDD2_PIT_FLTT
     // @DisplayName: Pitch axis rate controller target frequency in Hz
@@ -119,7 +119,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Range: 5 100
     // @Increment: 1
     // @Units: Hz
-    // @User: Standard
+    // @User: Advanced
 
     // @Param: PDD2_PIT_SMAX
     // @DisplayName: Pitch slew rate limit
@@ -127,7 +127,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Range: 0 200
     // @Increment: 0.5
     // @User: Advanced
-    AP_SUBGROUPINFO(_pdd2_atti_rate_pitch,"PDD2_Pitch", 2, AC_CustomControl_PDD2,AC_PDD2),
+    AP_SUBGROUPINFO(_pdd2_atti_rate_pitch,"PDD2_Pitch", 1, AC_CustomControl_PDD2,AC_PDD2),
 
     // @Param: PDD2_YAW_P
     // @DisplayName: Yaw axis PDD2 controller P gain
@@ -148,7 +148,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Description: Yaw axis PDD2 controller D2 gain.  Corrects long-term difference in desired Yaw rate vs actual Yaw rate
     // @Range: 0.001 0.02
     // @Increment: 0.001
-    // @User: Standard
+    // @User: Advanced
 
     // @Param: PDD2_YAW_FLTT
     // @DisplayName: Yaw axis rate controller target frequency in Hz
@@ -180,7 +180,7 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Range: 5 100
     // @Increment: 1
     // @Units: Hz
-    // @User: Standard
+    // @User: Advanced
 
     // @Param: PDD2_YAW_SMAX
     // @DisplayName: Yaw slew rate limit
@@ -188,13 +188,12 @@ const AP_Param::GroupInfo AC_CustomControl_PDD2::var_info[] = {
     // @Range: 0 200
     // @Increment: 0.5
     // @User: Advanced
-    AP_SUBGROUPINFO(_pdd2_atti_rate_yaw,"PDD2_Yaw", 3, AC_CustomControl_PDD2,AC_PDD2),
-
+    AP_SUBGROUPINFO(_pdd2_atti_rate_yaw,"PDD2_Yaw", 2 , AC_CustomControl_PDD2,AC_PDD2),
     AP_GROUPEND
 };
 
 // initialize in the constructor
-AC_CustomControl_PDD2::AC_CustomControl_PDD2(AC_CustomControl& frontend, AP_AHRS*& ahrs, AC_AttitudeControl_Multi*& att_control, AC_PosControl*& pos_control , AP_MotorsMulticopter*& motors, float dt) :
+AC_CustomControl_PDD2::AC_CustomControl_PDD2(AC_CustomControl& frontend, AP_AHRS_View*& ahrs, AC_AttitudeControl_Multi*& att_control, AC_PosControl*& pos_control , AP_MotorsMulticopter*& motors, float dt) :
     AC_CustomControl_Backend(frontend, ahrs, att_control, pos_control ,motors, dt),
     _pdd2_atti_rate_roll(AC_PDD2_DEFAULT_P_ROLL,AC_PDD2_DEFAULT_D_ROLL,AC_PDD2_DEFAULT_D2_ROLL,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT),
     _pdd2_atti_rate_pitch(AC_PDD2_DEFAULT_P_PITCH,AC_PDD2_DEFAULT_D_PITCH,AC_PDD2_DEFAULT_D2_PITCH,AC_PDD2_TFILT_HZ_DEFAULT,AC_PDD2_EFILT_HZ_DEFAULT,AC_PDD2_DFILT_HZ_DEFAULT,AC_PDD2_D2FILT_HZ_DEFAULT),
@@ -223,8 +222,11 @@ Vector3f AC_CustomControl_PDD2::update()
             break;
     }
 
-    gcs().send_text(MAV_SEVERITY_INFO, "PDD2 custom controller working");
+
     // run custom controller after here
+
+    const AP_AHRS &_aherese = AP::ahrs();
+
     Quaternion attitude_body, attitude_target;
 
     Vector3f EulerOrientation,EulerTargets,Angular_Accelerations;
@@ -240,7 +242,7 @@ Vector3f AC_CustomControl_PDD2::update()
     EulerTargets.y = _pos_control->get_pitch_cd();
     EulerTargets.z = _pos_control->get_yaw_cd();
 
-    Angular_Accelerations = _ahrs->get_ang_acc();
+    Angular_Accelerations = _aherese.get_ang_acc();
     attitude_target = _att_control->get_attitude_target_quat();
     // This vector represents the angular error to rotate the thrust vector using x and y and heading using z
     Vector3f attitude_error;

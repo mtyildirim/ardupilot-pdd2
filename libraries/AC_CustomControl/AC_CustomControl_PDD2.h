@@ -13,15 +13,15 @@
 
 #define AC_PDD2_DEFAULT_P_ROLL    1.0f
 #define AC_PDD2_DEFAULT_D_ROLL    0.25f
-#define AC_PDD2_DEFAULT_D2_ROLL   0.02f
+#define AC_PDD2_DEFAULT_D2_ROLL   0.005f
 
 #define AC_PDD2_DEFAULT_P_PITCH   1.0f
 #define AC_PDD2_DEFAULT_D_PITCH   0.25f
-#define AC_PDD2_DEFAULT_D2_PITCH  0.02f
+#define AC_PDD2_DEFAULT_D2_PITCH  0.005f
 
 #define AC_PDD2_DEFAULT_P_YAW     1.0f
 #define AC_PDD2_DEFAULT_D_YAW     0.25f
-#define AC_PDD2_DEFAULT_D2_YAW    0.02f
+#define AC_PDD2_DEFAULT_D2_YAW    0.005f
 
 
 
@@ -34,7 +34,7 @@
 
 class AC_CustomControl_PDD2 : public AC_CustomControl_Backend {
 public:
-    AC_CustomControl_PDD2(AC_CustomControl& frontend, AP_AHRS*& ahrs, AC_AttitudeControl_Multi*& att_control,AC_PosControl*& pos_control ,AP_MotorsMulticopter*& motors, float dt);
+    AC_CustomControl_PDD2(AC_CustomControl& frontend, AP_AHRS_View*& ahrs, AC_AttitudeControl_Multi*& att_control,AC_PosControl*& pos_control ,AP_MotorsMulticopter*& motors, float dt);
 
 
     Vector3f update(void) override;
