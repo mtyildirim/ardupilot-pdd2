@@ -10,15 +10,15 @@ const AP_Param::GroupInfo AC_PDD2::var_info[] = {
     // @Description: P Gain which produces an output value that is proportional to the current error value
     AP_GROUPINFO_FLAGS_DEFAULT_POINTER("P", 0, AC_PDD2, _kp, default_kp),
 
-    // @Param: I
+    // @Param: D
     // @DisplayName: PDD2 Integral Gain
-    // @Description: I Gain which produces an output that is proportional to both the magnitude and the duration of the error
+    // @Description: D Gain which produces an output that is proportional to  the rate of change of the error
     AP_GROUPINFO_FLAGS_DEFAULT_POINTER("D", 1, AC_PDD2, _kd, default_kd),
 
-    // @Param: D
+    // @Param: D2
     // @DisplayName: PDD2 Derivative Gain
-    // @Description: D Gain which produces an output that is proportional to the rate of change of the error
-    AP_GROUPINFO_FLAGS_DEFAULT_POINTER("D2", 2, AC_PDD2, _kd, default_kd2),
+    // @Description: D2 Gain which produces an output that is proportional to the rate of change of the first derivative
+    AP_GROUPINFO_FLAGS_DEFAULT_POINTER("D2", 2, AC_PDD2, _kd2, default_kd2),
 
     // 3 was for uint16 IMAX
 
@@ -109,6 +109,12 @@ void AC_PDD2::filt_D_hz(float hz)
     _filt_D_hz.set(fabsf(hz));
 }
 
+// filt_D_hz - set derivative filter hz
+void AC_PDD2::filt_D2_hz(float hz)
+{
+    _filt_D2_hz.set(fabsf(hz));
+}
+
 // slew_limit - set slew limit
 void AC_PDD2::slew_limit(float smax)
 {
@@ -146,7 +152,7 @@ float AC_PDD2::update_all(float target, float angle,float gyro, float ang_acc, f
 
         if (is_positive(dt)) {
             float derivative2 = (_derivative - _last_derivative) / dt;
-            _derivative2 += get_filt_D_alpha(dt) * (derivative2 - _derivative2);
+            _derivative2 += get_filt_D2_alpha(dt) * (derivative2 - _derivative2);
         }
     
     }
@@ -161,11 +167,12 @@ float AC_PDD2::update_all(float target, float angle,float gyro, float ang_acc, f
 
     P_out *= _PDD2_info.Dmod;
     D_out *= _PDD2_info.Dmod;
+    D2_out *= _PDD2_info.Dmod;
 
     // boost output if required
     P_out *= boost;
     D_out *= boost;
-
+    D2_out *= boost;
     _PDD2_info.target = _target;
     _PDD2_info.actual = angle;
     _PDD2_info.error = _error;
@@ -211,7 +218,7 @@ float AC_PDD2::update_error(float error,float gyro, float ang_acc, float dt, boo
     
         if (is_positive(dt)) {
             float derivative2 = (_derivative - _last_derivative) / dt;
-            _derivative2 += get_filt_D_alpha(dt) * (derivative2 - _derivative2);
+            _derivative2 += get_filt_D2_alpha(dt) * (derivative2 - _derivative2);
         }
     }
 
@@ -225,12 +232,14 @@ float AC_PDD2::update_error(float error,float gyro, float ang_acc, float dt, boo
 
     P_out *= _PDD2_info.Dmod;
     D_out *= _PDD2_info.Dmod;
+    D2_out *= _PDD2_info.Dmod;
     
     _PDD2_info.target = 0.0f;
     _PDD2_info.actual = 0.0f;
     _PDD2_info.error = _error;
     _PDD2_info.P = P_out;
     _PDD2_info.D = D_out;
+    _PDD2_info.D2 = D2_out;
 
     _last_derivative = _derivative;
 
@@ -260,6 +269,7 @@ void AC_PDD2::load_gains()
     _filt_T_hz.load();
     _filt_E_hz.load();
     _filt_D_hz.load();
+    _filt_D2_hz.load();
 }
 
 // save_gains - save gains to eeprom
@@ -271,6 +281,7 @@ void AC_PDD2::save_gains()
     _filt_T_hz.save();
     _filt_E_hz.save();
     _filt_D_hz.save();
+    _filt_D2_hz.save();
 }
 
 /// Overload the function call operator to permit easy initialisation

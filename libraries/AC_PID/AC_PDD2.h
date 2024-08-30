@@ -10,7 +10,7 @@
 #include <Filter/SlewLimiter.h>
 
 
-#include "AP_PIDInfo.h"
+#include "AP_PDD2Info.h"
 
 /// @class	AC_PDD2
 /// @brief	Copter PDD2 control class
@@ -65,6 +65,7 @@ public:
     AP_Float &filt_T_hz() { return _filt_T_hz; }
     AP_Float &filt_E_hz() { return _filt_E_hz; }
     AP_Float &filt_D_hz() { return _filt_D_hz; }
+    AP_Float &filt_D2_hz() { return _filt_D2_hz; }
     AP_Float &slew_limit() { return _slew_rate_max; }
 
     float get_filt_T_alpha(float dt) const;
@@ -91,7 +92,7 @@ public:
     // return current slew rate of slew limiter. Will return 0 if SMAX is zero
     float get_slew_rate(void) const { return _slew_limiter.get_slew_rate(); }
 
-    const AP_PIDInfo& get_PDD2_info(void) const { return _PDD2_info; }
+    const AP_PDD2Info& get_PDD2_info(void) const { return _PDD2_info; }
 
     // parameter var table
     static const struct AP_Param::GroupInfo var_info[];
@@ -129,7 +130,7 @@ protected:
     float _last_derivative;
     int8_t _slew_limit_scale;
 
-    AP_PIDInfo _PDD2_info;
+    AP_PDD2Info _PDD2_info;
 
 private:
     const float default_kp;
