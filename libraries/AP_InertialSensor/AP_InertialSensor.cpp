@@ -1138,8 +1138,8 @@ AP_InertialSensor::detect_backends(void)
     case AP_BoardConfig::PX4_BOARD_PX4V1:
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU60x0_NAME), ROTATION_NONE));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_45));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_315));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_315));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_YAW_45));
         break;
 
@@ -1153,8 +1153,8 @@ AP_InertialSensor::detect_backends(void)
                                                       ROTATION_PITCH_180));
 
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_45));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_315));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_315));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_YAW_45));
 
         break;
@@ -1172,8 +1172,8 @@ AP_InertialSensor::detect_backends(void)
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_NAME), ROTATION_YAW_270));
 
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_45));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_315));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_315));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_YAW_45));
 
         // new cubes have ICM20602, ICM20948, ICM20649
