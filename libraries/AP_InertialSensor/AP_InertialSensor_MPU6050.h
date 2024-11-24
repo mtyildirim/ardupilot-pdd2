@@ -241,7 +241,7 @@ private:
     uint8_t _ext_sens_data = 0;
 };
 
-#define ARMLENGHT 16.0f
+#define ARMLENGHT 0.16f
 
 #ifndef INS_INVENSENSE_20789_I2C_ADDR
 #define INS_INVENSENSE_20789_I2C_ADDR 0x68

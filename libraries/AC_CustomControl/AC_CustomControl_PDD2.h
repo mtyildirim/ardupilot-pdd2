@@ -28,7 +28,7 @@
 #define AC_PDD2_TFILT_HZ_DEFAULT  0.0f   // default input filter frequency
 #define AC_PDD2_EFILT_HZ_DEFAULT  0.0f   // default input filter frequency
 #define AC_PDD2_DFILT_HZ_DEFAULT  20.0f   // default input filter frequency
-#define AC_PDD2_D2FILT_HZ_DEFAULT 20.0f   // default input filter frequency
+#define AC_PDD2_D2FILT_HZ_DEFAULT 10.0f   // default input filter frequency
 #define AC_PDD2_RESET_TC          0.16f   // Time constant for integrator reset decay to zero
 
 
