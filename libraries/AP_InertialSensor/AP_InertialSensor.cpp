@@ -2587,20 +2587,10 @@ void AP_InertialSensor::calculate_ang_acc(void)
     third_accel = get_accel(4);
     fourth_accel = get_accel(5);
     
-    _ang_acc.x =  ( -first_accel.z + second_accel.z + third_accel.z - fourth_accel.z)/ARMLENGHT;
-    _ang_acc.y =  ( -first_accel.z + second_accel.z - third_accel.z + fourth_accel.z)/ARMLENGHT;
+    _ang_acc.x =  (  first_accel.z - second_accel.z - third_accel.z + fourth_accel.z)/ARMLENGHT;
+    _ang_acc.y =  (  first_accel.z - second_accel.z + third_accel.z - fourth_accel.z)/ARMLENGHT;
     _ang_acc.z =  (  first_accel.y + second_accel.y - third_accel.y - fourth_accel.y)/ARMLENGHT;
 
-    //log_ang_acc_raw(0,_ang_acc);
-   // gcs().send_named_float("deneme ang acc x ",_ang_acc.x);
-    
-   // hal.scheduler->delay(5);
-
-   // gcs().send_named_float("deneme ang acc y ",_ang_acc.y);
-
-   // hal.scheduler->delay(5);
-
-   // gcs().send_named_float("deneme ang acc z ",_ang_acc.z);
 }
 
 namespace AP {
