@@ -1963,12 +1963,12 @@ void GCS_MAVLINK::send_raw_imu()
         mag.zero();
     }
 
-    const Vector3f &_ang_acc = ins.get_ang_acc();
-    gcs().send_named_float("deneme ang acc x ",_ang_acc.x);
-    hal.scheduler->delay(2);
-    gcs().send_named_float("deneme ang acc y ",_ang_acc.y);
-    hal.scheduler->delay(2);
-    gcs().send_named_float("deneme ang acc z ",_ang_acc.z);
+//    const Vector3f &_ang_acc = ins.get_ang_acc();
+//    gcs().send_named_float("deneme ang acc x ",_ang_acc.x);
+  //  hal.scheduler->delay(1);
+//    gcs().send_named_float("deneme ang acc y ",_ang_acc.y);
+  //  hal.scheduler->delay(1);
+//    gcs().send_named_float("deneme ang acc z ",_ang_acc.z);
 
     mavlink_msg_raw_imu_send(
         chan,

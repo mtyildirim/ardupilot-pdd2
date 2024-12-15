@@ -123,7 +123,7 @@ AP_InertialSensor_Backend *AP_InertialSensor_InvensenseMPU6050::probe(AP_Inertia
                                                                enum Rotation rotation)
 {
 
-    uint8_t control_register = 1 << Channel; // Create control byte for the channel
+    uint8_t control_register = Channel; // Create control byte for the channel
 
     tca->transfer(&control_register, 1, nullptr, 0);
 

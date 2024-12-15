@@ -1137,25 +1137,20 @@ AP_InertialSensor::detect_backends(void)
     switch (AP_BoardConfig::get_board_type()) {
     case AP_BoardConfig::PX4_BOARD_PX4V1:
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU60x0_NAME), ROTATION_NONE));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 0 ,ROTATION_YAW_45));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_45));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_315));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_315));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_YAW_315));
         break;
 
     case AP_BoardConfig::PX4_BOARD_PIXHAWK:
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU60x0_NAME), ROTATION_ROLL_180));
-        ADD_BACKEND(AP_InertialSensor_LSM9DS0::probe(*this,
-                                                      hal.spi->get_device(HAL_INS_LSM9DS0_G_NAME),
-                                                      hal.spi->get_device(HAL_INS_LSM9DS0_A_NAME),
-                                                      ROTATION_ROLL_180,
-                                                      ROTATION_ROLL_180_YAW_270,
-                                                      ROTATION_PITCH_180));
 
+
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 0 ,ROTATION_YAW_45));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_45));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_315));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_315));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_YAW_315));
 
         break;
 
@@ -1171,10 +1166,10 @@ AP_InertialSensor::detect_backends(void)
                                                       ROTATION_ROLL_180_YAW_90));
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device(HAL_INS_MPU9250_NAME), ROTATION_YAW_270));
 
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 0 ,ROTATION_YAW_45));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 1 ,ROTATION_YAW_45));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_45));
+        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 2 ,ROTATION_YAW_315));
         ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 3 ,ROTATION_YAW_315));
-        ADD_BACKEND(AP_InertialSensor_InvensenseMPU6050::probe(*this, hal.i2c_mgr->get_device(1, 0x68), hal.i2c_mgr->get_device(1, 0x70) , 4 ,ROTATION_YAW_315));
         
         // new cubes have ICM20602, ICM20948, ICM20649
         ADD_BACKEND(AP_InertialSensor_Invensense::probe(*this, hal.spi->get_device("icm20602_ext"), ROTATION_ROLL_180_YAW_270));
@@ -1825,8 +1820,6 @@ void AP_InertialSensor::update(void)
         }
 
     calculate_ang_acc();
-
-
     
     _last_update_usec = AP_HAL::micros();
     
@@ -2582,14 +2575,25 @@ void AP_InertialSensor::force_save_calibration(void)
 void AP_InertialSensor::calculate_ang_acc(void)
 {
     Vector3f first_accel,second_accel,third_accel,fourth_accel ;
-    first_accel = get_accel(2);
-    second_accel = get_accel(3);
-    third_accel = get_accel(4);
-    fourth_accel = get_accel(5);
-    
-    _ang_acc.x =  (  first_accel.z - second_accel.z - third_accel.z + fourth_accel.z)/ARMLENGHT;
-    _ang_acc.y =  (  first_accel.z - second_accel.z + third_accel.z - fourth_accel.z)/ARMLENGHT;
-    _ang_acc.z =  (  first_accel.y + second_accel.y - third_accel.y - fourth_accel.y)/ARMLENGHT;
+    float sum1,sum2,sum3;
+    first_accel = get_accel(1);
+    second_accel = get_accel(2);
+    third_accel = get_accel(3);
+    fourth_accel = get_accel(4);
+
+    sum1 = ((first_accel.z+1.5f) - (second_accel.z) - (third_accel.z) + (fourth_accel.z));
+    sum2 = ((first_accel.z+1.5f) - (second_accel.z) + (third_accel.z) - (fourth_accel.z));
+    sum3 = (first_accel.y + second_accel.y - third_accel.y - fourth_accel.y);
+
+    _ang_acc.x = (sum1)/ARMLENGHT;
+    _ang_acc.y = (sum2)/ARMLENGHT;
+    _ang_acc.z = (sum3)/ARMLENGHT;
+
+    gcs().send_named_float("deneme ang acc x ",_ang_acc.x);
+    hal.scheduler->delay(1);
+    gcs().send_named_float("deneme ang acc y ",_ang_acc.y);
+    hal.scheduler->delay(1);
+    gcs().send_named_float("deneme ang acc y ",_ang_acc.z);
 
 }
 
