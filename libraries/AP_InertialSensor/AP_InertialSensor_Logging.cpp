@@ -60,27 +60,15 @@ void AP_InertialSensor::Write_IMU_instance(const uint64_t time_us, const uint8_t
     };
     AP::logger().WriteBlock(&pkt, sizeof(pkt));
 }
-void AP_InertialSensor_Backend::log_ang_acc_raw(const uint64_t sample_us, const Vector3f &ang_acc)
-{
-#if HAL_LOGGING_ENABLED
-    AP_Logger *logger = AP_Logger::get_singleton();
-    if (logger == nullptr) {
-        // should not have been called
-        return;
-    }
-    Write_ANG_ACC(sample_us, ang_acc);
 
-#endif
-}
 
 // Write ACC data packet: raw accel data
-void AP_InertialSensor_Backend::Write_ANG_ACC(const uint64_t sample_us, const Vector3f &ang_acc) const
+void AP_InertialSensor::Write_ANG_ACC(const Vector3f &ang_acc) const
 {
         const uint64_t now = AP_HAL::micros64();
         const struct log_ANG_ACC pkt {
             LOG_PACKET_HEADER_INIT(LOG_ANG_ACC),
             time_us   : now,
-            sample_us : sample_us?sample_us:now,
             AngAccX   : ang_acc.x,
             AngAccY   : ang_acc.y,
             AngAccZ   : ang_acc.z

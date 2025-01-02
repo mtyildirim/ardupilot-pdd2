@@ -40,6 +40,7 @@
 #include "AP_InertialSensor_Invensensev3.h"
 #include "AP_InertialSensor_NONE.h"
 #include "AP_InertialSensor_SCHA63T.h"
+#include "AP_InertialSensor_Backend.h"
 
 
 /* Define INS_TIMING_DEBUG to track down scheduling issues with the main loop.
@@ -2589,14 +2590,7 @@ void AP_InertialSensor::calculate_ang_acc(void)
     _ang_acc.y = (sum2)/ARMLENGHT;
     _ang_acc.z = (sum3)/ARMLENGHT;
 
-    gcs().send_named_float("deneme ang acc x ",_ang_acc.x);
-    hal.scheduler->delay(1);
-    gcs().send_named_float("deneme ang acc y ",_ang_acc.y);
-    hal.scheduler->delay(1);
-    gcs().send_named_float("deneme ang acc y ",_ang_acc.z);
-
 }
-
 namespace AP {
 
 AP_InertialSensor &ins()

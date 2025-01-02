@@ -112,6 +112,7 @@ public:
     /// @returns	vector of rotational rates in radians/second square
     ///
     const Vector3f     &get_ang_acc(void) const { return _ang_acc; }
+    void Write_ANG_ACC(const Vector3f &ang_acc) const __RAMFUNC__;
 
     /// Calculate current angular acceleration values
     ///

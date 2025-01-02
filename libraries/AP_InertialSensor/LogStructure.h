@@ -8,7 +8,8 @@
     LOG_IMU_MSG, \
     LOG_ISBH_MSG, \
     LOG_ISBD_MSG, \
-    LOG_VIBE_MSG
+    LOG_VIBE_MSG, \
+    LOG_ANG_ACC
 
 // @LoggerMessage: ACC
 // @Description: IMU accelerometer data
@@ -37,7 +38,6 @@ struct PACKED log_ACC {
     struct PACKED log_ANG_ACC {
     LOG_PACKET_HEADER;
     uint64_t time_us;
-    uint64_t sample_us;
     float AngAccX, AngAccY, AngAccZ;
     };
 
@@ -139,4 +139,6 @@ struct PACKED log_Vibe {
     { LOG_ISBH_MSG, sizeof(log_ISBH), \
       "ISBH", "QHBBHHQf", "TimeUS,N,type,instance,mul,smp_cnt,SampleUS,smp_rate", "s-----sz", "F-----F-" },  \
     { LOG_ISBD_MSG, sizeof(log_ISBD), \
-      "ISBD", "QHHaaa", "TimeUS,N,seqno,x,y,z", "s--ooo", "F--???" },
+      "ISBD", "QHHaaa", "TimeUS,N,seqno,x,y,z", "s--ooo", "F--???" }, \
+    { LOG_ANG_ACC, sizeof(log_ANG_ACC), \
+      "AngAcc", "Qfff", "TimeUS,AngAccX,AngAccY,AngAccZ", "sooo", "F-F000",true }, 

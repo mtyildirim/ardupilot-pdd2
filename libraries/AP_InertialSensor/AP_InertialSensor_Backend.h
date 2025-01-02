@@ -60,12 +60,7 @@ public:
      */
     virtual void start() { }
 
-
-
-
-
-    void Write_ANG_ACC(const uint64_t sample_us, const Vector3f &ang_acc) const __RAMFUNC__;
-    void log_ang_acc_raw(const uint64_t sample_us, const Vector3f &ang_acc) __RAMFUNC__;
+  
 
     /*
      * Return an AuxiliaryBus if backend has another bus it is able to export
@@ -325,8 +320,7 @@ private:
     bool should_log_imu_raw() const ;
     void log_accel_raw(uint8_t instance, const uint64_t sample_us, const Vector3f &accel) __RAMFUNC__;
     void log_gyro_raw(uint8_t instance, const uint64_t sample_us, const Vector3f &gryo) __RAMFUNC__;
-
     // logging
     void Write_ACC(const uint8_t instance, const uint64_t sample_us, const Vector3f &accel) const __RAMFUNC__; // Write ACC data packet: raw accel data
-    void Write_GYR(const uint8_t instance, const uint64_t sample_us, const Vector3f &gyro) const __RAMFUNC__;  // Write GYR data packet: raw gyro data
+    void Write_GYR(const uint8_t instance, const uint64_t sample_us, const Vector3f &gyro) const __RAMFUNC__;  // Write GYR data packet: raw gyro dat
 };
