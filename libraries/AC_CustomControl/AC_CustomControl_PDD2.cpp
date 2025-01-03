@@ -224,40 +224,48 @@ Vector3f AC_CustomControl_PDD2::update()
 
 
     // run custom controller after here
-
     const AP_AHRS &_aherese = AP::ahrs();
 
-    Quaternion attitude_body, attitude_target;
-
+    Quaternion attitude_body;
+    Quaternion attitude_target;
     Vector3f EulerOrientation,EulerTargets,Angular_Accelerations;
 
-    _ahrs->get_quat_body_to_ned(attitude_body);
+    _aherese.get_quat_body_to_ned(attitude_body);
+    attitude_target = _att_control->get_attitude_target_quat();
+    attitude_target.to_euler(EulerTargets.x,EulerTargets.y,EulerTargets.z);
     attitude_body.to_euler(EulerOrientation.x, EulerOrientation.y, EulerOrientation.z);
 
     //EulerOrientation.x= _ahrs->get_roll();
     //EulerOrientation.y= _ahrs->get_pitch();                //bunlardeğil
     //EulerOrientation.z= _ahrs->get_yaw();
 
-    EulerTargets.x = _pos_control->get_roll_cd();
-    EulerTargets.y = _pos_control->get_pitch_cd();
-    EulerTargets.z = _pos_control->get_yaw_cd();
+    //EulerTargets.x = _pos_control->get_roll_cd();
+    //EulerTargets.y = _pos_control->get_pitch_cd();
+    //EulerTargets.z = _pos_control->get_yaw_cd();
+    
+    //EulerTargets.x =   nav_attitude_time.roll_deg;
+    //EulerTargets.y =   nav_attitude_time.pitch_deg; 
+    //EulerTargets.z =   nav_attitude_time.yaw_deg; 
 
     Angular_Accelerations = _aherese.get_ang_acc();
-    attitude_target = _att_control->get_attitude_target_quat();
+    //attitude_target = _att_control->get_attitude_target_quat();
     // This vector represents the angular error to rotate the thrust vector using x and y and heading using z
-    Vector3f attitude_error;
-    float _thrust_angle, _thrust_error_angle;
-    _att_control->thrust_heading_rotation_angles(attitude_target, attitude_body, attitude_error, _thrust_angle, _thrust_error_angle);
+    //Vector3f attitude_error;
+    //float _thrust_angle, _thrust_error_angle;
+    //_att_control->thrust_heading_rotation_angles(attitude_target, attitude_body, attitude_error, _thrust_angle, _thrust_error_angle);
 
 
     // run rate controller
-    Vector3f gyro_latest = _ahrs->get_gyro_latest();
+    Vector3f gyro_latest = _aherese.get_gyro_latest();
     Vector3f motor_out;
     motor_out.x = _pdd2_atti_rate_roll.update_all(EulerTargets.x, EulerOrientation.x, gyro_latest.x,Angular_Accelerations.x,1);
     motor_out.y = _pdd2_atti_rate_pitch.update_all(EulerTargets.y, EulerOrientation.y, gyro_latest.y,Angular_Accelerations.y,1);
     motor_out.z = _pdd2_atti_rate_yaw.update_all(EulerTargets.z, EulerOrientation.z, gyro_latest.z,Angular_Accelerations.z,1);
 
+    
+
     return motor_out;
+
 }
 
 // reset controller to avoid build up on the ground

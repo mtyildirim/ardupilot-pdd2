@@ -90,11 +90,7 @@ void AC_CustomControl::update(void)
         Vector3f motor_out_rpy;
 
         motor_out_rpy = _backend->update();
-
-        _motors->set_roll(motor_out_rpy.x);
-        _motors->set_pitch(motor_out_rpy.y);
-        _motors->set_yaw(motor_out_rpy.z);
-        //motor_set(motor_out_rpy);
+        motor_set(motor_out_rpy);
     }
 }
 

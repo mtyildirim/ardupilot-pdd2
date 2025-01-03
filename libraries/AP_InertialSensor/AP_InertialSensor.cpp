@@ -2585,7 +2585,7 @@ void AP_InertialSensor::calculate_ang_acc(void)
     sum1 = ((first_accel.z+1.5f) - (second_accel.z) - (third_accel.z) + (fourth_accel.z));
     sum2 = ((first_accel.z+1.5f) - (second_accel.z) + (third_accel.z) - (fourth_accel.z));
     sum3 = (first_accel.y + second_accel.y - third_accel.y - fourth_accel.y);
-
+    
     _ang_acc.x = (sum1)/ARMLENGHT;
     _ang_acc.y = (sum2)/ARMLENGHT;
     _ang_acc.z = (sum3)/ARMLENGHT;

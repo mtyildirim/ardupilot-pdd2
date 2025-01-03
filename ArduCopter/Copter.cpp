@@ -574,7 +574,8 @@ void Copter::twentyfive_hz_logging()
     if (should_log(MASK_LOG_IMU) && !(should_log(MASK_LOG_IMU_FAST))) {
         AP::ins().Write_IMU();
         Vector3f ang_acc = AP::ahrs().get_ang_acc();
-        AP::ins().Write_ANG_ACC(ang_acc);
+        uint64_t sample_us = AP_HAL::micros64();
+        AP::ins().Write_ANG_ACC(sample_us,ang_acc);
     }
 
 #if MODE_AUTOROTATE_ENABLED == ENABLED

@@ -1962,7 +1962,6 @@ void GCS_MAVLINK::send_raw_imu()
     } else {
         mag.zero();
     }
-
 //    const Vector3f &_ang_acc = ins.get_ang_acc();
 //    gcs().send_named_float("deneme ang acc x ",_ang_acc.x);
 //    hal.scheduler->delay(1);
